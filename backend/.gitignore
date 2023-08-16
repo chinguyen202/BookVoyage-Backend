@@ -478,3 +478,7 @@ $RECYCLE.BIN/
 
 # Rider
 .idea/
+
+#development 
+src/Presentation/BookVoyage.WebApi/appsettings.json
+src/Presentation/BookVoyage.WebApi/appsettings.Development.json
