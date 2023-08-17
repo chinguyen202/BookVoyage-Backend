@@ -12,23 +12,23 @@ namespace BookVoyage.WebApi.Controllers;
 [ApiController]
 public class CategoriesController: BaseApiController
 {
-    // Get all Categories
+    //  Get all Categories
     [HttpGet(ApiEndpoints.Categories.GetAll)]
-    public async Task<ActionResult<List<Category>>> GetCategories()
+    public async Task<IActionResult> GetCategories()
     {
-        return await Mediator.Send(new GetAllCategoriesQuery());
+        return HandleResult(await Mediator.Send(new GetAllCategoriesQuery())) ;
     }
-    // Get a specific category
+    //  Get a specific category
     [HttpGet(ApiEndpoints.Categories.Get)]
-    public async Task<ActionResult<Category>> GetCategory(Guid id)
+    public async Task<IActionResult> GetCategory(Guid id)
     {
-        return await Mediator.Send(new GetCategoryQuery { Id = id });
+        return HandleResult(await Mediator.Send(new GetCategoryQuery { Id = id }));
     }
-    // Create a category
+    //  Create a category 
     [HttpPost(ApiEndpoints.Categories.Create)]
     public async Task<IActionResult> CreateCategory(Category category)
     {
-        return Ok(await Mediator.Send(new CreateCategoryCommand { Category = category }));
+        return HandleResult(await Mediator.Send(new CreateCategoryCommand { Category = category }));
     }
     
     // Update a category
@@ -36,13 +36,13 @@ public class CategoriesController: BaseApiController
     public async Task<IActionResult> EditCategory(Guid id, Category category)
     {
         category.Id = id;
-        return Ok(await Mediator.Send(new EditCategoryCommand { Category = category }));
+        return HandleResult(await Mediator.Send(new EditCategoryCommand { Category = category }));
     }
     
     // Delete a category
     [HttpDelete(ApiEndpoints.Categories.Delete)]
     public async Task<IActionResult> DeleteCategory(Guid id)
     {
-        return Ok(await Mediator.Send(new DeleteCategoryCommand{Id = id}));
+        return HandleResult(await Mediator.Send(new DeleteCategoryCommand{Id = id}));
     }
 }

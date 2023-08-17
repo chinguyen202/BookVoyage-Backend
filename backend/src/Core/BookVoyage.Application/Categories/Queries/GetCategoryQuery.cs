@@ -1,3 +1,4 @@
+using BookVoyage.Application.Common;
 using BookVoyage.Domain.Entities;
 using BookVoyage.Persistence.Data;
 using MediatR;
@@ -5,12 +6,12 @@ using MediatR;
 namespace BookVoyage.Application.Categories.Queries;
 
 // Handles a query to fetch a category by ID from the database.
-public record GetCategoryQuery : IRequest<Category>
+public record GetCategoryQuery : IRequest<ApiResult<Category>>
 {
     public Guid Id { get; set; }
 }
 
-public class GetCategoryQueryHandler : IRequestHandler<GetCategoryQuery, Category>
+public class GetCategoryQueryHandler : IRequestHandler<GetCategoryQuery, ApiResult<Category>>
 {
     private readonly ApplicationDbContext _dbContext;
 
@@ -19,8 +20,9 @@ public class GetCategoryQueryHandler : IRequestHandler<GetCategoryQuery, Categor
         _dbContext = dbContext;
     }
 
-    public async Task<Category> Handle(GetCategoryQuery request, CancellationToken cancellationToken)
+    public async Task<ApiResult<Category>> Handle(GetCategoryQuery request, CancellationToken cancellationToken)
     {
-        return await _dbContext.Categories.FindAsync(request.Id);
+       var category = await _dbContext.Categories.FindAsync(request.Id);
+       return ApiResult<Category>.Success(category);
     }
 }
