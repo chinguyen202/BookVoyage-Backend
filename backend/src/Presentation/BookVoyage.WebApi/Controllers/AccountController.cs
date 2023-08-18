@@ -1,15 +1,16 @@
-using BookVoyage.Domain.Entities;
-using BookVoyage.Utility.Constants;
-using BookVoyage.WebApi.DTOs;
-using BookVoyage.WebApi.Services;
+using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
+using BookVoyage.Domain.Entities;
+using BookVoyage.Utility.Constants;
+using BookVoyage.WebApi.DTOs;
+using BookVoyage.WebApi.Services;
+
 namespace BookVoyage.WebApi.Controllers;
 
-[AllowAnonymous]
 [ApiController]
 public class AccountController: ControllerBase
 {
@@ -23,6 +24,7 @@ public class AccountController: ControllerBase
     }
     
     // User login 
+    [AllowAnonymous]
     [HttpPost(ApiEndpoints.Auth.Login)]
     public async Task<ActionResult<UserDto>> Login(LoginDto loginDto)
     {
@@ -31,17 +33,13 @@ public class AccountController: ControllerBase
         var result = await _userManager.CheckPasswordAsync(user, loginDto.Password);
         if (result)
         {
-            return new UserDto()
-            {
-                UserName = user.UserName,
-                Token = _tokenService.CreateToken(user),
-                Image = null
-            };
+            return CreateUserObject(user);
         }
         return Unauthorized();
     }
     
     // User register
+    [AllowAnonymous]
     [HttpPost(ApiEndpoints.Users.Create)]
     public async Task<ActionResult<UserDto>> Register(RegisterDto registerDto)
     {
@@ -64,14 +62,28 @@ public class AccountController: ControllerBase
         var result = await _userManager.CreateAsync(user, registerDto.Password);
         if (result.Succeeded)
         {
-            return new UserDto
-            {
-                UserName = user.UserName,
-                Image = null,
-                Token = _tokenService.CreateToken(user)
-            };
+            return CreateUserObject(user);
         }
 
         return BadRequest(result.Errors);
+    }
+
+    // Get an user from token
+    [Authorize]
+    [HttpGet(ApiEndpoints.Users.Get)]
+    public async Task<ActionResult<UserDto>> GetCurrentUser()
+    {
+        var user = await _userManager.FindByEmailAsync(User.FindFirstValue(ClaimTypes.Email));
+        return CreateUserObject(user);
+    }
+    
+    private UserDto CreateUserObject(AppUser user)
+    {
+        return new UserDto
+        {
+            UserName = user.UserName,
+            Image = null,
+            Token = _tokenService.CreateToken(user)
+        };
     }
 }
