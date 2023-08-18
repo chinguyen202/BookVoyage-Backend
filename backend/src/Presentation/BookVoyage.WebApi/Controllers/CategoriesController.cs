@@ -14,12 +14,14 @@ namespace BookVoyage.WebApi.Controllers;
 public class CategoriesController: BaseApiController
 {
     //  Get all Categories
+    [AllowAnonymous]
     [HttpGet(ApiEndpoints.Categories.GetAll)]
     public async Task<IActionResult> GetCategories()
     {
         return HandleResult(await Mediator.Send(new GetAllCategoriesQuery())) ;
     }
     //  Get a specific category
+    [AllowAnonymous]
     [HttpGet(ApiEndpoints.Categories.Get)]
     public async Task<IActionResult> GetCategory(Guid id)
     {

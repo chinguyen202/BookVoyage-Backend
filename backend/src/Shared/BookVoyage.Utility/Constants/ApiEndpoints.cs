@@ -38,6 +38,15 @@ public static class ApiEndpoints
     {
         private const string Base = $"{ApiBase}/auth";
         public const string Login = $"{Base}/login";
+    }
 
+    public static class Users
+    {
+        private const string Base = $"{ApiBase}/users";
+        public const string Create = $"{Base}/register";
+        public const string Get = $"{Base}/{{id:guid}}";
+        public const string GetAll = Base;
+        public const string Update = $"{Base}/{{id:guid}}";
+        public const string Delete = $"{Base}/{{id:guid}}";
     }
 }
