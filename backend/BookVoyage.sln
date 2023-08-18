@@ -17,6 +17,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookVoyage.Persistence", "s
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookVoyage.Utility", "src\Shared\BookVoyage.Utility\BookVoyage.Utility.csproj", "{FEBAE12F-C5CC-4A69-BDAE-F229AA9FF289}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookVoyage.Infrastructure", "src\Infrastructure\BookVoyage.Infrastructure\BookVoyage.Infrastructure.csproj", "{BC1DD0C3-9169-40EB-AC8C-58CA3E6C4206}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -54,5 +56,9 @@ Global
 		{FEBAE12F-C5CC-4A69-BDAE-F229AA9FF289}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FEBAE12F-C5CC-4A69-BDAE-F229AA9FF289}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FEBAE12F-C5CC-4A69-BDAE-F229AA9FF289}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BC1DD0C3-9169-40EB-AC8C-58CA3E6C4206}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BC1DD0C3-9169-40EB-AC8C-58CA3E6C4206}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BC1DD0C3-9169-40EB-AC8C-58CA3E6C4206}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BC1DD0C3-9169-40EB-AC8C-58CA3E6C4206}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

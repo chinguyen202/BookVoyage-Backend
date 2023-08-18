@@ -7,15 +7,12 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="EFCore.NamingConventions" Version="7.0.2" />
-      <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="7.0.4" />
+      <PackageReference Include="CloudinaryDotNet" Version="1.22.0" />
     </ItemGroup>
 
 
     <ItemGroup>
       <ProjectReference Include="..\..\Core\BookVoyage.Domain\BookVoyage.Domain.csproj" />
     </ItemGroup>
-
-
 
 </Project>
