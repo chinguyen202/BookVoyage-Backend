@@ -1,9 +1,8 @@
-using System.ComponentModel.DataAnnotations.Schema;
-using BookVoyage.Domain.Common;
+using BookVoyage.Domain.Entities;
 
-namespace BookVoyage.Domain.Entities;
+namespace BookVoyage.Application.Books;
 
-public class Book: AuditableBaseEntity
+public class BookDto
 {
     public string Title { get; set; }
     public string ISBN { get; set; }
@@ -13,11 +12,11 @@ public class Book: AuditableBaseEntity
     public string Publisher { get; set; }
     public int YearOfPublished { get; set; }
     public string ImageUrl { get; set; }
-    // Navigation property
     public Guid CategoryId { get; set; }
-    [ForeignKey("CategoryId")]
-    public Category Category { get; set; }
     public Guid AuthorId { get; set; }
-    [ForeignKey("AuthorId")]
-    public Author Author { get; set; }
+}
+
+public class BookEditDto: BookDto
+{
+    public Guid Id { get; set; }
 }
