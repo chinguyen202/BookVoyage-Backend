@@ -8,7 +8,7 @@ namespace BookVoyage.Application.Categories.Commands;
 
 public record EditCategoryCommand: IRequest<ApiResult<Unit>>
 {
-    public Category Category { get; set; }
+    public CategoryUpdateDto CategoryUpdate { get; set; }
 }
 
 public class EditCategoryCommandHandler : IRequestHandler<EditCategoryCommand, ApiResult<Unit>>
@@ -23,11 +23,33 @@ public class EditCategoryCommandHandler : IRequestHandler<EditCategoryCommand, A
     }
     public async Task<ApiResult<Unit>> Handle(EditCategoryCommand request, CancellationToken cancellationToken)
     {
-        var category = await _dbContext.Categories.FindAsync(request.Category.Id);
-        if (category == null) return null;
-        _mapper.Map(request.Category, category);
-        var result = await _dbContext.SaveChangesAsync() > 0;
-        if (!result) return ApiResult<Unit>.Failure("Fail to update the category");
-        return ApiResult<Unit>.Success(Unit.Value) ;
+        
+        // Find the category by its Id
+        var category = await _dbContext.Categories.FindAsync(request.CategoryUpdate.Id);
+        if (category == null)
+        {
+            return ApiResult<Unit>.Failure("Category not found");
+        }
+
+        _mapper.Map(request.CategoryUpdate, category);
+    
+        try
+        {
+            // Save changes to the database
+            var result = await _dbContext.SaveChangesAsync(cancellationToken);
+
+            if (result > 0)
+            {
+                return ApiResult<Unit>.Success(Unit.Value);
+            }
+            else
+            {
+                return ApiResult<Unit>.Failure("Failed to update the category");
+            }
+        }
+        catch (Exception ex)
+        {
+            return ApiResult<Unit>.Failure($"An error occurred: {ex.Message}");
+        }
     }
 }

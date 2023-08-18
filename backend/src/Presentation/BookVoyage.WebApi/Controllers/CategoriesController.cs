@@ -1,7 +1,7 @@
+using BookVoyage.Application.Categories;
 using BookVoyage.Application.Categories.Commands;
 using Microsoft.AspNetCore.Mvc;
 
-using BookVoyage.Domain.Entities;
 using BookVoyage.Utility.Constants;
 using BookVoyage.Application.Categories.Queries;
 using Microsoft.AspNetCore.Authorization;
@@ -29,17 +29,17 @@ public class CategoriesController: BaseApiController
     }
     //  Create a category 
     [HttpPost(ApiEndpoints.Categories.Create)]
-    public async Task<IActionResult> CreateCategory(Category category)
+    public async Task<IActionResult> CreateCategory(CategoryDto categoryDto)
     {
-        return HandleResult(await Mediator.Send(new CreateCategoryCommand { Category = category }));
+        return HandleResult(await Mediator.Send(new CreateCategoryCommand { CategoryDto = categoryDto }));
     }
     
     // Update a category
     [HttpPut(ApiEndpoints.Categories.Update)]
-    public async Task<IActionResult> EditCategory(Guid id, Category category)
+    public async Task<IActionResult> EditCategory(Guid id, CategoryUpdateDto categoryDto)
     {
-        category.Id = id;
-        return HandleResult(await Mediator.Send(new EditCategoryCommand { Category = category }));
+        categoryDto.Id = id;
+        return HandleResult(await Mediator.Send(new EditCategoryCommand { CategoryUpdate = categoryDto }));
     }
     
     // Delete a category

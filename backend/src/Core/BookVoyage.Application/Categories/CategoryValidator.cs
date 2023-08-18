@@ -3,7 +3,7 @@ using FluentValidation;
 
 namespace BookVoyage.Application.Categories;
 
-public class CategoryValidator: AbstractValidator<Category>
+public class CategoryValidator: AbstractValidator<CategoryDto>
 {
     public CategoryValidator()
     {

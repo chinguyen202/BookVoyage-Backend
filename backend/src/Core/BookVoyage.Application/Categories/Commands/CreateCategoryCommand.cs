@@ -9,7 +9,7 @@ namespace BookVoyage.Application.Categories.Commands;
 
 public record CreateCategoryCommand : IRequest<ApiResult<Unit>>
 {
-    public Category Category { get; set; }
+    public CategoryDto CategoryDto { get; set; }
 }
 
 public class CreateCategoryCommandHandler : IRequestHandler<CreateCategoryCommand, ApiResult<Unit>>
@@ -24,7 +24,8 @@ public class CreateCategoryCommandHandler : IRequestHandler<CreateCategoryComman
     }
     public async Task<ApiResult<Unit>> Handle(CreateCategoryCommand request, CancellationToken cancellationToken)
     {
-        _dbContext.Categories.Add(request.Category);
+        var category = _mapper.Map<Category>(request.CategoryDto);
+        _dbContext.Categories.Add(category);
         var result = await _dbContext.SaveChangesAsync() > 0;
         if (!result) return ApiResult<Unit>.Failure("Failed to create Category");
         return ApiResult<Unit>.Success(Unit.Value);
