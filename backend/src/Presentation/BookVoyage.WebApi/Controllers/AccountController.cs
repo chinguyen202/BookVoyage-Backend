@@ -1,6 +1,7 @@
 using BookVoyage.Domain.Entities;
 using BookVoyage.Utility.Constants;
 using BookVoyage.WebApi.DTOs;
+using BookVoyage.WebApi.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,10 +11,12 @@ namespace BookVoyage.WebApi.Controllers;
 public class AccountController: ControllerBase
 {
     private readonly UserManager<AppUser> _userManager;
+    private readonly TokenService _tokenService;
 
-    public AccountController(UserManager<AppUser> userManager)
+    public AccountController(UserManager<AppUser> userManager, TokenService tokenService )
     {
         _userManager = userManager;
+        _tokenService = tokenService;
     }
 
     [HttpPost(ApiEndpoints.Auth.Login)]
@@ -27,7 +30,7 @@ public class AccountController: ControllerBase
             return new UserDto()
             {
                 UserName = user.UserName,
-                Token = "this is token",
+                Token = _tokenService.CreateToken(user),
                 Image = null
             };
         }

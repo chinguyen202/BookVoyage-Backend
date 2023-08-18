@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using BookVoyage.Domain.Entities;
 using BookVoyage.Utility.Constants;
 using BookVoyage.Application.Categories.Queries;
+using Microsoft.AspNetCore.Authorization;
 
 namespace BookVoyage.WebApi.Controllers;
 
