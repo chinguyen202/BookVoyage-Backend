@@ -51,4 +51,11 @@ public static class ApiEndpoints
         public const string Update = $"{Base}/{{id:guid}}";
         public const string Delete = $"{Base}/{{id:guid}}";
     }
+
+    public static class ShoppingCart
+    {
+        private const string Base = $"{ApiBase}/cart";
+        public const string UpsertItem = Base;
+        public const string Get = $"{Base}/{{id:string}}";
+    }
 }

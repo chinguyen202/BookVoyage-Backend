@@ -16,7 +16,7 @@ public record UpsertShoppingCartCommand : IRequest<ApiResult<Unit>>
 }
 
 /// <summary>
-/// 
+/// Insert/update shopping cart handler
 /// </summary>
 public class UpsertShoppingCartCommandHandler : IRequestHandler<UpsertShoppingCartCommand, ApiResult<Unit>>
 {
@@ -37,13 +37,17 @@ public class UpsertShoppingCartCommandHandler : IRequestHandler<UpsertShoppingCa
         Book book = _dbContext.Books.FirstOrDefault(u => u.Id == request.UpsertShoppingCartDto.BookId);
         if (book == null)
         {
-            return null;
+            return ApiResult<Unit>.Failure("Book does not exist");
         }
 
         if (shoppingCart == null && request.UpsertShoppingCartDto.Quantity > 0)
         {
             // Create a shopping cart
-            ShoppingCart newCart = new() { BuyerId = request.UpsertShoppingCartDto.BuyerId };
+            ShoppingCart newCart = new()
+            {
+                BuyerId = request.UpsertShoppingCartDto.BuyerId,
+                CartItems = null
+            };
             _dbContext.ShoppingCarts.Add(newCart);
             var result = await _dbContext.SaveChangesAsync() > 0;
             if (!result) return ApiResult<Unit>.Failure("Fail to add shopping cart");
