@@ -1,12 +1,15 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Npgsql;
 
 using BookVoyage.Domain.Entities;
-using Npgsql;
 
 namespace BookVoyage.Persistence.Data;
 
+/// <summary>
+/// 
+/// </summary>
 public class ApplicationDbContext: IdentityDbContext<AppUser>
 {
     private readonly IConfiguration _configuration;
@@ -15,10 +18,11 @@ public class ApplicationDbContext: IdentityDbContext<AppUser>
     {
         _configuration = configuration;
     }
-
     public DbSet<Category> Categories { get; set; }
-    // public DbSet<Book> Books { get; set; }
-    // public DbSet<Author> Authors { get; set; }
+    public DbSet<Book> Books { get; set; }
+    public DbSet<Author> Authors { get; set; }
+    public DbSet<ShoppingCart> ShoppingCarts { get; set; }
+    public DbSet<CartItem> CartItems { get; set; }
     
     static ApplicationDbContext()
     {
@@ -32,5 +36,19 @@ public class ApplicationDbContext: IdentityDbContext<AppUser>
         optionsBuilder.AddInterceptors(new TimeStampInterceptor());
         optionsBuilder.UseNpgsql(builder.Build()).UseSnakeCaseNamingConvention();
     }
-    
+
+    protected override void OnModelCreating(ModelBuilder builder)
+    {
+        base.OnModelCreating((builder));
+        // Configuration
+        
+        builder.Entity<Book>(entity =>
+        {
+            entity.HasOne(a => a.Author)
+                .WithMany(p => p.Books)
+                .HasForeignKey(a => a.AuthorId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+        });
+    }
 } 

@@ -3,6 +3,7 @@ using System;
 using BookVoyage.Persistence.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace BookVoyage.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230818074748_AddBookEntity")]
+    partial class AddBookEntity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -150,10 +153,6 @@ namespace BookVoyage.Persistence.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("id");
 
-                    b.Property<Guid>("AuthorId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("author_id");
-
                     b.Property<Guid>("CategoryId")
                         .HasColumnType("uuid")
                         .HasColumnName("category_id");
@@ -206,13 +205,29 @@ namespace BookVoyage.Persistence.Migrations
                     b.HasKey("Id")
                         .HasName("pk_books");
 
-                    b.HasIndex("AuthorId")
-                        .HasDatabaseName("ix_books_author_id");
-
                     b.HasIndex("CategoryId")
                         .HasDatabaseName("ix_books_category_id");
 
                     b.ToTable("books", (string)null);
+                });
+
+            modelBuilder.Entity("BookVoyage.Domain.Entities.BookAuthor", b =>
+                {
+                    b.Property<Guid>("BookId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("book_id");
+
+                    b.Property<Guid>("AuthorId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("author_id");
+
+                    b.HasKey("BookId", "AuthorId")
+                        .HasName("pk_book_authors");
+
+                    b.HasIndex("AuthorId")
+                        .HasDatabaseName("ix_book_authors_author_id");
+
+                    b.ToTable("book_authors", (string)null);
                 });
 
             modelBuilder.Entity("BookVoyage.Domain.Entities.CartItem", b =>
@@ -235,15 +250,15 @@ namespace BookVoyage.Persistence.Migrations
                         .HasColumnName("shopping_cart_id");
 
                     b.HasKey("Id")
-                        .HasName("pk_cart_items");
+                        .HasName("pk_cart_item");
 
                     b.HasIndex("BookId")
-                        .HasDatabaseName("ix_cart_items_book_id");
+                        .HasDatabaseName("ix_cart_item_book_id");
 
                     b.HasIndex("ShoppingCartId")
-                        .HasDatabaseName("ix_cart_items_shopping_cart_id");
+                        .HasDatabaseName("ix_cart_item_shopping_cart_id");
 
-                    b.ToTable("cart_items", (string)null);
+                    b.ToTable("cart_item", (string)null);
                 });
 
             modelBuilder.Entity("BookVoyage.Domain.Entities.Category", b =>
@@ -272,6 +287,108 @@ namespace BookVoyage.Persistence.Migrations
                     b.ToTable("categories", (string)null);
                 });
 
+            modelBuilder.Entity("BookVoyage.Domain.Entities.OrderDetail", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<Guid>("BookId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("book_id");
+
+                    b.Property<string>("ItemName")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("item_name");
+
+                    b.Property<Guid>("OrderHeaderId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("order_header_id");
+
+                    b.Property<double>("Price")
+                        .HasColumnType("double precision")
+                        .HasColumnName("price");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("integer")
+                        .HasColumnName("quantity");
+
+                    b.HasKey("Id")
+                        .HasName("pk_order_details");
+
+                    b.HasIndex("BookId")
+                        .HasDatabaseName("ix_order_details_book_id");
+
+                    b.HasIndex("OrderHeaderId")
+                        .HasDatabaseName("ix_order_details_order_header_id");
+
+                    b.ToTable("order_details", (string)null);
+                });
+
+            modelBuilder.Entity("BookVoyage.Domain.Entities.OrderHeader", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp without time zone")
+                        .HasColumnName("created_at");
+
+                    b.Property<DateTime>("ModifiedAt")
+                        .HasColumnType("timestamp without time zone")
+                        .HasColumnName("modified_at");
+
+                    b.Property<double>("OrderTotal")
+                        .HasColumnType("double precision")
+                        .HasColumnName("order_total");
+
+                    b.Property<int>("OrderTotalQuantity")
+                        .HasColumnType("integer")
+                        .HasColumnName("order_total_quantity");
+
+                    b.Property<string>("PickupEmail")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("pickup_email");
+
+                    b.Property<string>("PickupName")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("pickup_name");
+
+                    b.Property<string>("PickupPhoneNumber")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("pickup_phone_number");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("status");
+
+                    b.Property<string>("StripePaymentIntentId")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("stripe_payment_intent_id");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("user_id");
+
+                    b.HasKey("Id")
+                        .HasName("pk_order_headers");
+
+                    b.HasIndex("UserId")
+                        .HasDatabaseName("ix_order_headers_user_id");
+
+                    b.ToTable("order_headers", (string)null);
+                });
+
             modelBuilder.Entity("BookVoyage.Domain.Entities.ShoppingCart", b =>
                 {
                     b.Property<Guid>("Id")
@@ -283,14 +400,6 @@ namespace BookVoyage.Persistence.Migrations
                         .IsRequired()
                         .HasColumnType("text")
                         .HasColumnName("buyer_id");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp without time zone")
-                        .HasColumnName("created_at");
-
-                    b.Property<DateTime>("ModifiedAt")
-                        .HasColumnType("timestamp without time zone")
-                        .HasColumnName("modified_at");
 
                     b.HasKey("Id")
                         .HasName("pk_shopping_carts");
@@ -464,13 +573,6 @@ namespace BookVoyage.Persistence.Migrations
 
             modelBuilder.Entity("BookVoyage.Domain.Entities.Book", b =>
                 {
-                    b.HasOne("BookVoyage.Domain.Entities.Author", "Author")
-                        .WithMany("Books")
-                        .HasForeignKey("AuthorId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired()
-                        .HasConstraintName("fk_books_authors_author_id");
-
                     b.HasOne("BookVoyage.Domain.Entities.Category", "Category")
                         .WithMany()
                         .HasForeignKey("CategoryId")
@@ -478,9 +580,28 @@ namespace BookVoyage.Persistence.Migrations
                         .IsRequired()
                         .HasConstraintName("fk_books_categories_category_id");
 
+                    b.Navigation("Category");
+                });
+
+            modelBuilder.Entity("BookVoyage.Domain.Entities.BookAuthor", b =>
+                {
+                    b.HasOne("BookVoyage.Domain.Entities.Author", "Author")
+                        .WithMany("Books")
+                        .HasForeignKey("AuthorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_book_authors_authors_author_id");
+
+                    b.HasOne("BookVoyage.Domain.Entities.Book", "Book")
+                        .WithMany("Authors")
+                        .HasForeignKey("BookId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_book_authors_books_book_id");
+
                     b.Navigation("Author");
 
-                    b.Navigation("Category");
+                    b.Navigation("Book");
                 });
 
             modelBuilder.Entity("BookVoyage.Domain.Entities.CartItem", b =>
@@ -490,16 +611,47 @@ namespace BookVoyage.Persistence.Migrations
                         .HasForeignKey("BookId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
-                        .HasConstraintName("fk_cart_items_books_book_id");
+                        .HasConstraintName("fk_cart_item_books_book_id");
 
                     b.HasOne("BookVoyage.Domain.Entities.ShoppingCart", null)
                         .WithMany("CartItems")
                         .HasForeignKey("ShoppingCartId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
-                        .HasConstraintName("fk_cart_items_shopping_carts_shopping_cart_id");
+                        .HasConstraintName("fk_cart_item_shopping_carts_shopping_cart_id");
 
                     b.Navigation("Book");
+                });
+
+            modelBuilder.Entity("BookVoyage.Domain.Entities.OrderDetail", b =>
+                {
+                    b.HasOne("BookVoyage.Domain.Entities.Book", "Book")
+                        .WithMany()
+                        .HasForeignKey("BookId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_order_details_books_book_id");
+
+                    b.HasOne("BookVoyage.Domain.Entities.OrderHeader", null)
+                        .WithMany("OrderItems")
+                        .HasForeignKey("OrderHeaderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_order_details_order_headers_order_header_id");
+
+                    b.Navigation("Book");
+                });
+
+            modelBuilder.Entity("BookVoyage.Domain.Entities.OrderHeader", b =>
+                {
+                    b.HasOne("BookVoyage.Domain.Entities.AppUser", "AppUser")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_order_headers_users_user_id");
+
+                    b.Navigation("AppUser");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -562,6 +714,16 @@ namespace BookVoyage.Persistence.Migrations
             modelBuilder.Entity("BookVoyage.Domain.Entities.Author", b =>
                 {
                     b.Navigation("Books");
+                });
+
+            modelBuilder.Entity("BookVoyage.Domain.Entities.Book", b =>
+                {
+                    b.Navigation("Authors");
+                });
+
+            modelBuilder.Entity("BookVoyage.Domain.Entities.OrderHeader", b =>
+                {
+                    b.Navigation("OrderItems");
                 });
 
             modelBuilder.Entity("BookVoyage.Domain.Entities.ShoppingCart", b =>
