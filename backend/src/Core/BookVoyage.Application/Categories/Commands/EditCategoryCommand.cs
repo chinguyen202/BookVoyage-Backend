@@ -1,7 +1,9 @@
 using AutoMapper;
+using BookVoyage.Application.Authors;
 using BookVoyage.Application.Common;
 using BookVoyage.Domain.Entities;
 using BookVoyage.Persistence.Data;
+using FluentValidation;
 using MediatR;
 
 namespace BookVoyage.Application.Categories.Commands;
@@ -15,41 +17,26 @@ public class EditCategoryCommandHandler : IRequestHandler<EditCategoryCommand, A
 {
     private readonly ApplicationDbContext _dbContext;
     private readonly IMapper _mapper;
+    private readonly IValidator<CategoryDto> _validator;
 
-    public EditCategoryCommandHandler(ApplicationDbContext dbContext, IMapper mapper)
+    public EditCategoryCommandHandler(ApplicationDbContext dbContext, IMapper mapper, IValidator<CategoryDto> validator)
     {
         _dbContext = dbContext;
         _mapper = mapper;
+        _validator = validator;
     }
+
     public async Task<ApiResult<Unit>> Handle(EditCategoryCommand request, CancellationToken cancellationToken)
     {
-        
         // Find the category by its Id
         var category = await _dbContext.Categories.FindAsync(request.CategoryUpdate.Id);
         if (category == null)
         {
-            return ApiResult<Unit>.Failure("Category not found");
+            return ApiResult<Unit>.Failure("Category doesn't exist!");
         }
-
-        _mapper.Map(request.CategoryUpdate, category);
-    
-        try
-        {
-            // Save changes to the database
-            var result = await _dbContext.SaveChangesAsync(cancellationToken);
-
-            if (result > 0)
-            {
-                return ApiResult<Unit>.Success(Unit.Value);
-            }
-            else
-            {
-                return ApiResult<Unit>.Failure("Failed to update the category");
-            }
-        }
-        catch (Exception ex)
-        {
-            return ApiResult<Unit>.Failure($"An error occurred: {ex.Message}");
-        }
+        await _validator.ValidateAndThrowAsync(request.CategoryUpdate, cancellationToken);
+        category.Name = request.CategoryUpdate.Name;
+        var result = _dbContext.SaveChangesAsync() ;
+        return ApiResult<Unit>.Success(Unit.Value);
     }
 }

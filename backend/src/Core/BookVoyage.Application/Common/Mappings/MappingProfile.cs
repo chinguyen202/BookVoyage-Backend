@@ -12,15 +12,27 @@ public class MappingProfile: Profile
     {
         CreateMap<Category, CategoryDto>();
         CreateMap<CategoryDto, Category>();
-        CreateMap<Category, CategoryUpdateDto>();
-        CreateMap<CategoryUpdateDto, Category>();
         CreateMap<Author, AuthorDto>();
         CreateMap<Author, AuthorEditDto>();
         CreateMap<AuthorDto, Author>();
         CreateMap<AuthorEditDto, Author>();
-        CreateMap<Book, BookDto>();
-        CreateMap<Book, BookEditDto>();
-        CreateMap<BookEditDto, Book>();
+        CreateMap<Book, BookDto>()
+            .ForMember(dest => dest.Category
+                , opt => opt.MapFrom(src => new CategoryDto
+            {
+                Id = src.Category.Id,
+                Name = src.Category.Name
+            }))            
+            .ForMember(dest => dest.Authors
+                , opt => opt.MapFrom(src => src.Authors.Select(author => new AuthorEditDto
+            {
+                Id = author.Id,
+                FirstName = author.FirstName,
+                LastName = author.LastName,
+                Publisher = author.Publisher
+            }).ToList()));
         CreateMap<BookDto, Book>();
+        CreateMap<BookUpsertDto, Book>();
+        CreateMap<Book, BookUpsertDto>();
     }
 }
