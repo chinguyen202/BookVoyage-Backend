@@ -44,11 +44,11 @@ public class ApplicationDbContext: IdentityDbContext<AppUser>
         
         builder.Entity<Book>(entity =>
         {
-            entity.HasOne(a => a.Author)
+            entity.HasMany(a => a.Authors)
                 .WithMany(p => p.Books)
-                .HasForeignKey(a => a.AuthorId)
-                .OnDelete(DeleteBehavior.NoAction);
-
+                .UsingEntity(
+                    l => l.HasOne(typeof(Book)).WithMany().OnDelete(DeleteBehavior.NoAction),
+                    r => r.HasOne(typeof(Author)).WithMany().OnDelete(DeleteBehavior.NoAction));
         });
     }
 } 

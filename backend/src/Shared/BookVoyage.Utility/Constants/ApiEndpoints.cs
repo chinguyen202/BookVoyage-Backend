@@ -56,6 +56,6 @@ public static class ApiEndpoints
     {
         private const string Base = $"{ApiBase}/cart";
         public const string UpsertItem = Base;
-        public const string Get = $"{Base}/{{id:string}}";
+        public const string Get = $"{Base}/{{id:alpha}}";
     }
 }
