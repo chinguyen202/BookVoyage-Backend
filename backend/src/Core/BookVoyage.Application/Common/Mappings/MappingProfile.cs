@@ -13,9 +13,9 @@ public class MappingProfile: Profile
         CreateMap<Category, CategoryDto>();
         CreateMap<CategoryDto, Category>();
         CreateMap<Author, AuthorDto>();
-        CreateMap<Author, AuthorEditDto>();
         CreateMap<AuthorDto, Author>();
-        CreateMap<AuthorEditDto, Author>();
+        // CreateMap<Author, AuthorEditDto>();
+        // CreateMap<AuthorEditDto, Author>();
         CreateMap<Book, BookDto>()
             .ForMember(dest => dest.Category
                 , opt => opt.MapFrom(src => new CategoryDto
@@ -24,7 +24,7 @@ public class MappingProfile: Profile
                 Name = src.Category.Name
             }))            
             .ForMember(dest => dest.Authors
-                , opt => opt.MapFrom(src => src.Authors.Select(author => new AuthorEditDto
+                , opt => opt.MapFrom(src => src.Authors.Select(author => new AuthorDto
             {
                 Id = author.Id,
                 FirstName = author.FirstName,

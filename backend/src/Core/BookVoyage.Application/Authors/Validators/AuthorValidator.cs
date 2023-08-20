@@ -4,7 +4,7 @@ using BookVoyage.Persistence.Data;
 namespace BookVoyage.Application.Authors.Validators;
 
 public abstract class AuthorBaseValidator<T> : AbstractValidator<T>
-    where T : AuthorEditDto
+    where T : AuthorDto
 {
     protected readonly ApplicationDbContext _dbContext;
 

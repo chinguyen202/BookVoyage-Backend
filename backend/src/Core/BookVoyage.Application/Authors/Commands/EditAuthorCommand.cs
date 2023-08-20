@@ -10,16 +10,16 @@ namespace BookVoyage.Application.Categories.Commands;
 
 public record EditAuthorCommand: IRequest<ApiResult<Unit>>
 {
-    public AuthorEditDto AuthorEditDto { get; set; }
+    public AuthorDto AuthorEditDto { get; set; }
 }
 
 public class EditAuthorCommandHandler : IRequestHandler<EditAuthorCommand, ApiResult<Unit>>
 {
     private readonly ApplicationDbContext _dbContext;
     private readonly IMapper _mapper;
-    private readonly IValidator<AuthorEditDto> _validator;
+    private readonly IValidator<AuthorDto> _validator;
 
-    public EditAuthorCommandHandler(ApplicationDbContext dbContext, IMapper mapper, IValidator<AuthorEditDto> validator)
+    public EditAuthorCommandHandler(ApplicationDbContext dbContext, IMapper mapper, IValidator<AuthorDto> validator)
     {
         _dbContext = dbContext;
         _mapper = mapper;

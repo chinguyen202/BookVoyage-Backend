@@ -39,7 +39,7 @@ public class AuthorsController: BaseApiController
     // Update a Author
     [AllowAnonymous] // For development only
     [HttpPut(ApiEndpoints.Authors.Update)]
-    public async Task<IActionResult> EditAuthor(Guid id, AuthorEditDto authorEditDto)
+    public async Task<IActionResult> EditAuthor(Guid id, AuthorDto authorEditDto)
     {
         authorEditDto.Id = id;
         return HandleResult(await Mediator.Send(new EditAuthorCommand { AuthorEditDto = authorEditDto }));

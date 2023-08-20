@@ -1,6 +1,5 @@
 using BookVoyage.Application.Authors;
 using BookVoyage.Application.Categories;
-using BookVoyage.Domain.Entities;
 
 namespace BookVoyage.Application.Books;
 
@@ -15,7 +14,7 @@ public class BookDto
     public int YearOfPublished { get; set; }
     public string ImageUrl { get; set; }
     public CategoryDto Category { get; set; }
-    public List<AuthorEditDto> Authors { get; set; }
+    public List<AuthorDto> Authors { get; set; }
 }
 
 public class BookUpsertDto
