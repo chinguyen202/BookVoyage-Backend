@@ -1,15 +1,17 @@
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+
 using BookVoyage.Application.Authors;
 using BookVoyage.Application.Authors.Commands;
 using BookVoyage.Application.Authors.Queries;
 using BookVoyage.Application.Categories.Commands;
-using BookVoyage.Application.Categories.Queries;
-using BookVoyage.Domain.Entities;
 using BookVoyage.Utility.Constants;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
 
 namespace BookVoyage.WebApi.Controllers;
 
+/// <summary>
+/// Author endpoint
+/// </summary>
 public class AuthorsController: BaseApiController
 {
     //  Get all Author
@@ -27,6 +29,7 @@ public class AuthorsController: BaseApiController
         return HandleResult(await Mediator.Send(new GetAuthorQuery { Id = id }));
     }
     //  Create a Author
+    [AllowAnonymous] // For development only
     [HttpPost(ApiEndpoints.Authors.Create)]
     public async Task<IActionResult> CreateAuthor(AuthorDto authorDto)
     {
@@ -34,6 +37,7 @@ public class AuthorsController: BaseApiController
     }
     
     // Update a Author
+    [AllowAnonymous] // For development only
     [HttpPut(ApiEndpoints.Authors.Update)]
     public async Task<IActionResult> EditAuthor(Guid id, AuthorEditDto authorEditDto)
     {
@@ -42,6 +46,7 @@ public class AuthorsController: BaseApiController
     }
     
     // Delete a Author
+    [AllowAnonymous] // For development only
     [HttpDelete(ApiEndpoints.Authors.Delete)]
     public async Task<IActionResult> DeleteAuthor(Guid id)
     {
