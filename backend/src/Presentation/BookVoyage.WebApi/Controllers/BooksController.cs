@@ -1,26 +1,28 @@
-using BookVoyage.Application.Authors.Queries;
-using BookVoyage.Application.Books;
-using BookVoyage.Application.Books.Commands;
-using BookVoyage.Application.Books.Queries;
-using BookVoyage.Domain.Entities;
-using BookVoyage.Utility.Constants;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
+using BookVoyage.Application.Books;
+using BookVoyage.Application.Books.Commands;
+using BookVoyage.Application.Books.Queries;
+using BookVoyage.Utility.Constants;
+
 namespace BookVoyage.WebApi.Controllers;
 
+/// <summary>
+/// Controller for all book-related operations
+/// </summary>
 public class BooksController: BaseApiController
 {
     //  Get all Book
     [AllowAnonymous]
     [HttpGet(ApiEndpoints.Books.GetAll)]
-    public async Task<IActionResult> GetBooks()
+    public async Task<IActionResult> GetAllBook()
     {
         return HandleResult(await Mediator.Send(new GetAllBooksQuery())) ;
     }
     //  Get a specific Book
     [AllowAnonymous]
-    [HttpGet(ApiEndpoints.Books.Get)]
+    [HttpGet("api/books/{id}")]
     public async Task<IActionResult> GetBook(Guid id)
     {
         return HandleResult(await Mediator.Send(new GetBookQuery { Id = id }));
@@ -28,15 +30,15 @@ public class BooksController: BaseApiController
     //  Create a Book
     [AllowAnonymous]
     [HttpPost(ApiEndpoints.Books.Create)]
-    public async Task<IActionResult> CreateBook(BookDto bookDto)
+    public async Task<IActionResult> CreateBook(BookUpsertDto bookDto)
     {
-        return HandleResult(await Mediator.Send(new CreateBookCommand { BookDto = bookDto }));
+        return HandleResult(await Mediator.Send(new CreateBookCommand { BookUpsertDto = bookDto }));
     }
     
     // Update a Book
     [AllowAnonymous]
     [HttpPut(ApiEndpoints.Books.Update)]
-    public async Task<IActionResult> EditBook(Guid id, BookEditDto bookEditDto)
+    public async Task<IActionResult> EditBook(Guid id, BookUpsertDto bookEditDto)
     {
         bookEditDto.Id = id;
         return HandleResult(await Mediator.Send(new EditBookCommand { BookEditDto = bookEditDto }));

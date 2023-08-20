@@ -1,4 +1,6 @@
-using BookVoyage.Application.Authors.Queries;
+using AutoMapper;
+using BookVoyage.Application.Authors;
+using BookVoyage.Application.Categories;
 using BookVoyage.Application.Common;
 using BookVoyage.Domain.Entities;
 using BookVoyage.Persistence.Data;
@@ -9,20 +11,28 @@ namespace BookVoyage.Application.Books.Queries;
 
 
 // Handles a query to fetch a list of categories from the database.
-    public record GetAllBooksQuery : IRequest<ApiResult<List<Book>>>;
+    public record GetAllBooksQuery : IRequest<ApiResult<List<BookDto>>>;
 
-    public class GetAllBooksQueryHandler : IRequestHandler<GetAllBooksQuery, ApiResult<List<Book>>>
+    public class GetAllBooksQueryHandler : IRequestHandler<GetAllBooksQuery, ApiResult<List<BookDto>>>
     {
         private readonly ApplicationDbContext _dbContext;
+        private readonly IMapper _mapper;
 
-        public GetAllBooksQueryHandler(ApplicationDbContext dbContext)
+        public GetAllBooksQueryHandler(ApplicationDbContext dbContext, IMapper mapper)
         {
             _dbContext = dbContext;
+            _mapper = mapper;
         }
 
-        public async Task<ApiResult<List<Book>>> Handle(GetAllBooksQuery request, CancellationToken cancellationToken)
+        public async Task<ApiResult<List<BookDto>>> Handle(GetAllBooksQuery request, CancellationToken cancellationToken)
         {
-            return ApiResult<List<Book>>.Success(await _dbContext.Books.ToListAsync());
+            var books = await _dbContext.Books
+                .Include(a => a.Category)
+                .Include(a => a.Authors)
+                .ToListAsync();
+
+            var bookDtos = _mapper.Map<List<BookDto>>(books);
+            return ApiResult<List<BookDto>>.Success(bookDtos);
         }
     }
 
