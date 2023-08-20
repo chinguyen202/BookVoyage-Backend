@@ -28,6 +28,7 @@ public class CategoriesController: BaseApiController
         return HandleResult(await Mediator.Send(new GetCategoryQuery { Id = id }));
     }
     //  Create a category 
+    [AllowAnonymous] // for development only
     [HttpPost(ApiEndpoints.Categories.Create)]
     public async Task<IActionResult> CreateCategory(CategoryDto categoryDto)
     {
@@ -35,14 +36,16 @@ public class CategoriesController: BaseApiController
     }
     
     // Update a category
+    [AllowAnonymous] // For development only
     [HttpPut(ApiEndpoints.Categories.Update)]
-    public async Task<IActionResult> EditCategory(Guid id, CategoryUpdateDto categoryDto)
+    public async Task<IActionResult> EditCategory(Guid id, CategoryDto categoryDto)
     {
         categoryDto.Id = id;
         return HandleResult(await Mediator.Send(new EditCategoryCommand { CategoryUpdate = categoryDto }));
     }
     
     // Delete a category
+    [AllowAnonymous] // For development only
     [HttpDelete(ApiEndpoints.Categories.Delete)]
     public async Task<IActionResult> DeleteCategory(Guid id)
     {

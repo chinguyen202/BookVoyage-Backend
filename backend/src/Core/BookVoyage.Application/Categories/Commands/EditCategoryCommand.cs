@@ -8,7 +8,7 @@ namespace BookVoyage.Application.Categories.Commands;
 
 public record EditCategoryCommand: IRequest<ApiResult<Unit>>
 {
-    public CategoryUpdateDto CategoryUpdate { get; set; }
+    public CategoryDto CategoryUpdate { get; set; }
 }
 
 public class EditCategoryCommandHandler : IRequestHandler<EditCategoryCommand, ApiResult<Unit>>
