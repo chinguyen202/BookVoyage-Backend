@@ -3,7 +3,7 @@ using BookVoyage.Domain.Common;
 
 namespace BookVoyage.Domain.Entities;
 
-public class CartItem
+public class CartItem: BaseEntity
 {
     public int Quantity { get; set; }
     // Navigation properties

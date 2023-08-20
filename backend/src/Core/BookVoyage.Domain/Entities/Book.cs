@@ -10,14 +10,12 @@ public class Book: AuditableBaseEntity
     public double UnitPrice { get; set; }
     public int UnitInStock { get; set; }
     public string Summary { get; set; }
-    public string Publisher { get; set; }
     public int YearOfPublished { get; set; }
-    public string ImageUrl { get; set; }
+    public string ImageUrl { get; set; } 
     // Navigation property
     public Guid CategoryId { get; set; }
     [ForeignKey("CategoryId")]
     public Category Category { get; set; }
-    public Guid AuthorId { get; set; }
-    [ForeignKey("AuthorId")]
-    public Author Author { get; set; }
+    public List<Author> Authors { get; set; } = new();
+    
 }
