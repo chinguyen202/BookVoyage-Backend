@@ -7,11 +7,12 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="CloudinaryDotNet" Version="1.22.0" />
+      <PackageReference Include="Azure.Storage.Blobs" Version="12.17.0" />
     </ItemGroup>
 
 
     <ItemGroup>
+      <ProjectReference Include="..\..\Core\BookVoyage.Application\BookVoyage.Application.csproj" />
       <ProjectReference Include="..\..\Core\BookVoyage.Domain\BookVoyage.Domain.csproj" />
     </ItemGroup>
 

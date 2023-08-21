@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 
 using BookVoyage.Application.Common.Extensions;
 using BookVoyage.Domain.Entities;
+using BookVoyage.Infrastructure;
 using BookVoyage.Persistence.Data;
 using BookVoyage.Persistence.Extensions;
 using BookVoyage.WebApi.Extensions;
@@ -23,10 +24,10 @@ builder.Services.AddControllers(option =>
     var policy = new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build();
     option.Filters.Add(new AuthorizeFilter(policy));
 });
-
+builder.Services.AddIdentityServices(builder.Configuration);
 builder.Services.AddPersistenceServices(builder.Configuration);
 builder.Services.AddApplicationServices();
-builder.Services.AddIdentityServices(builder.Configuration);
+builder.Services.AddInfrastructureServices(builder.Configuration);
 
 var app = builder.Build();
 
