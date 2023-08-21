@@ -1,5 +1,6 @@
 using BookVoyage.Application.Authors;
 using BookVoyage.Application.Categories;
+using Microsoft.AspNetCore.Http;
 
 namespace BookVoyage.Application.Books;
 
@@ -26,7 +27,7 @@ public class BookUpsertDto
     public int UnitInStock { get; set; }
     public string Summary { get; set; }
     public int YearOfPublished { get; set; }
-    public string ImageUrl { get; set; }
+    public IFormFile File { get; set; }
     public Guid CategoryId { get; set; }
     public List<Guid> AuthorIds { get; set; }
 }

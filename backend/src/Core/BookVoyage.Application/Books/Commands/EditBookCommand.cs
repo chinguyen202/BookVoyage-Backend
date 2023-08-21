@@ -2,8 +2,10 @@ using AutoMapper;
 using MediatR;
 
 using BookVoyage.Application.Common;
+using BookVoyage.Application.Common.Interfaces;
 using BookVoyage.Domain.Entities;
 using BookVoyage.Persistence.Data;
+using BookVoyage.Utility.Constants;
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 
@@ -19,61 +21,73 @@ public class EditBookCommandHandler : IRequestHandler<EditBookCommand, ApiResult
     private readonly ApplicationDbContext _dbContext;
     private readonly IMapper _mapper;
     private readonly IValidator<BookUpsertDto> _validator;
+    private readonly IBlobService _blobService;
 
-    public EditBookCommandHandler(ApplicationDbContext dbContext, IMapper mapper, IValidator<BookUpsertDto> validator)
+    public EditBookCommandHandler(ApplicationDbContext dbContext, IMapper mapper, IValidator<BookUpsertDto> validator, IBlobService blobService)
     {
         _dbContext = dbContext;
         _mapper = mapper;
         _validator = validator;
+        _blobService = blobService;
     }
 
     public async Task<ApiResult<Unit>> Handle(EditBookCommand request, CancellationToken cancellationToken)
     {
+        // Validate form data
         await _validator.ValidateAndThrowAsync(request.BookEditDto, cancellationToken);
-        var book = await _dbContext.Books
+        // Get the update book from database
+        var bookFromDb = await _dbContext.Books
                 .Include(b => b.Authors)
                 .SingleOrDefaultAsync(b => b.Id == request.BookEditDto.Id);
 
-        if (book == null)
+        if (bookFromDb == null)
         {
             return ApiResult<Unit>.Failure("Book is not found");
         }
 
-            // Check if the category is updated and update it if there is a change
-            if (book.CategoryId != request.BookEditDto.CategoryId)
+        // Check if the category is updated and update it if there is a change
+        if (bookFromDb.CategoryId != request.BookEditDto.CategoryId)
+        {
+           var category = await _dbContext.Categories.FindAsync(request.BookEditDto.CategoryId);
+            if (category == null)
             {
-                var category = await _dbContext.Categories.FindAsync(request.BookEditDto.CategoryId);
-                if (category == null)
-                {
-                    return ApiResult<Unit>.Failure("Category is not found");
-                }
-
-                book.Category = category;
+                return ApiResult<Unit>.Failure("Category is not found");
             }
+            bookFromDb.Category = category;
+        }
 
-            // Check if authors have changed and update accordingly
-            var currentAuthorIds = book.Authors.Select(a => a.Id).ToList();
-            if (!currentAuthorIds.SequenceEqual(request.BookEditDto.AuthorIds))
-            {
-                var authors = await _dbContext.Authors
-                    .Where(a => request.BookEditDto.AuthorIds.Contains(a.Id))
-                    .ToListAsync();
-                book.Authors.Clear();
-                book.Authors.AddRange(authors);
-            }
+        // Check if authors have changed and update accordingly
+        var currentAuthorIds = bookFromDb.Authors.Select(a => a.Id).ToList();
+        if (!currentAuthorIds.SequenceEqual(request.BookEditDto.AuthorIds))
+        {
+            var authors = await _dbContext.Authors
+                .Where(a => request.BookEditDto.AuthorIds.Contains(a.Id))
+                .ToListAsync();
+            bookFromDb.Authors.Clear();
+            bookFromDb.Authors.AddRange(authors);
+        }
+        
+        // Check if the image was changed 
+        if (request.BookEditDto.File != null && request.BookEditDto.File.Length > 0)
+        {
+            var fileName = $"{Guid.NewGuid()}{Path.GetExtension(request.BookEditDto.File.FileName)}";
+            await _blobService.DeleteBlob(bookFromDb.ImageUrl.Split("/").Last(), SD.SdStorageContainer);
+            bookFromDb.ImageUrl = await _blobService.UploadBlob(fileName, SD.SdStorageContainer,
+                request.BookEditDto.File);
+        }
 
-            // Update the book
-            _mapper.Map(request.BookEditDto, book);
+        // Update the book
+        _mapper.Map(request.BookEditDto, bookFromDb);
+        
+        // Save changes to the database
+        var result = await _dbContext.SaveChangesAsync(cancellationToken) > 0;
 
-            // Save changes to the database
-            var result = await _dbContext.SaveChangesAsync(cancellationToken) > 0;
-
-            if (!result)
-            {
-                return ApiResult<Unit>.Failure("Failed to update the book");
-            }
-
-            return ApiResult<Unit>.Success(Unit.Value);
+        if (!result)
+        {
+            return ApiResult<Unit>.Failure("Failed to update the book");
+        }
+        
+        return ApiResult<Unit>.Success(Unit.Value);
         
     }
 }

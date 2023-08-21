@@ -22,7 +22,7 @@ public class BooksController: BaseApiController
     }
     //  Get a specific Book
     [AllowAnonymous]
-    [HttpGet("api/books/{id}")]
+    [HttpGet(ApiEndpoints.Books.Get)]
     public async Task<IActionResult> GetBook(Guid id)
     {
         return HandleResult(await Mediator.Send(new GetBookQuery { Id = id }));
@@ -30,7 +30,7 @@ public class BooksController: BaseApiController
     //  Create a Book
     [AllowAnonymous]
     [HttpPost(ApiEndpoints.Books.Create)]
-    public async Task<IActionResult> CreateBook(BookUpsertDto bookDto)
+    public async Task<IActionResult> CreateBook([FromForm]BookUpsertDto bookDto)
     {
         return HandleResult(await Mediator.Send(new CreateBookCommand { BookUpsertDto = bookDto }));
     }
@@ -38,7 +38,7 @@ public class BooksController: BaseApiController
     // Update a Book
     [AllowAnonymous]
     [HttpPut(ApiEndpoints.Books.Update)]
-    public async Task<IActionResult> EditBook(Guid id, BookUpsertDto bookEditDto)
+    public async Task<IActionResult> EditBook(Guid id, [FromForm]BookUpsertDto bookEditDto)
     {
         bookEditDto.Id = id;
         return HandleResult(await Mediator.Send(new EditBookCommand { BookEditDto = bookEditDto }));

@@ -4,8 +4,10 @@ using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 
 using BookVoyage.Application.Common;
+using BookVoyage.Application.Common.Interfaces;
 using BookVoyage.Domain.Entities;
 using BookVoyage.Persistence.Data;
+using BookVoyage.Utility.Constants;
 
 namespace BookVoyage.Application.Books.Commands;
 
@@ -14,23 +16,29 @@ public record CreateBookCommand : IRequest<ApiResult<Unit>>
     public BookUpsertDto BookUpsertDto { get; set; }
 }
 
-public class CreateAuthorCommandHandler : IRequestHandler<CreateBookCommand, ApiResult<Unit>>
+public class CreateBookCommandHandler : IRequestHandler<CreateBookCommand, ApiResult<Unit>>
 {
     private readonly ApplicationDbContext _dbContext;
     private readonly IMapper _mapper;
     private readonly IValidator<BookUpsertDto> _validator;
+    private readonly IBlobService _blobService;
 
-    public CreateAuthorCommandHandler(ApplicationDbContext dbContext, IMapper mapper, IValidator<BookUpsertDto> validator)
+    public CreateBookCommandHandler(ApplicationDbContext dbContext, IMapper mapper, IValidator<BookUpsertDto> validator, IBlobService blobService)
     {
         _dbContext = dbContext;
         _mapper = mapper;
         _validator = validator;
+        _blobService = blobService;
     }
     public async Task<ApiResult<Unit>> Handle(CreateBookCommand request, CancellationToken cancellationToken)
     {
         await _validator.ValidateAndThrowAsync(request.BookUpsertDto, cancellationToken);
         // Map the BookDto to the Book entity
         var newBook = _mapper.Map<Book>(request.BookUpsertDto);
+        // Upload the image
+        string fileName = $"{Guid.NewGuid()}{Path.GetExtension(request.BookUpsertDto.File.Name)}";
+        var imageUrl = await _blobService.UploadBlob(fileName,SD.SdStorageContainer,request.BookUpsertDto.File);
+        newBook.ImageUrl = imageUrl;
         // Fetch the category from db if exists
         var category = await _dbContext.Categories.FindAsync(request.BookUpsertDto.CategoryId);
         newBook.Category = category;
