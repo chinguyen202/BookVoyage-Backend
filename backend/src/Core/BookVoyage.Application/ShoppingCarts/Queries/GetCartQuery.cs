@@ -21,10 +21,14 @@ public class GetCartQueryHandler: IRequestHandler<GetCartQuery, ApiResult<Shoppi
     }
     public async Task<ApiResult<ShoppingCart>> Handle(GetCartQuery request, CancellationToken cancellationToken)
     {
-        var shoppingCart =_dbContext.ShoppingCarts
+        var shoppingCart = await _dbContext.ShoppingCarts
             .Include(u => u.CartItems)
             .ThenInclude(u => u.Book)
-            .FirstOrDefault(u => u.BuyerId == request.Id);
+            .FirstOrDefaultAsync(u => u.BuyerId == request.Id);
+        if (shoppingCart == null)
+        {
+            return ApiResult<ShoppingCart>.Failure("User currently doesn't have any shoppping cart");
+        }
         if (shoppingCart.CartItems != null && (shoppingCart.CartItems.Count > 0))
         {
             shoppingCart.CartTotal = shoppingCart.CartItems.Sum(u => u.Quantity * u.Book.UnitPrice);

@@ -2,9 +2,7 @@ using AutoMapper;
 using BookVoyage.Application.Authors;
 using BookVoyage.Application.Books;
 using BookVoyage.Application.Categories;
-using BookVoyage.Application.Orders;
 using BookVoyage.Domain.Entities;
-using BookVoyage.Domain.Entities.OrderAggegate;
 
 namespace BookVoyage.Application.Common.Mappings;
 

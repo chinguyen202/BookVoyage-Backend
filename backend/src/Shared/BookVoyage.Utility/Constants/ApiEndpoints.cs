@@ -58,4 +58,12 @@ public static class ApiEndpoints
         public const string UpsertItem = Base;
         public const string Get = $"{Base}/{{id:alpha}}";
     }
+
+    public static class Orders
+    {
+        private const string Base = $"{ApiBase}/orders";
+        public const string Create = Base;
+        public const string GetByUserId = Base;
+        public const string GetByOrderId = $"{Base}/{{id:guid}}";
+    }
 }
