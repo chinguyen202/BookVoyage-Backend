@@ -3,6 +3,7 @@ using System;
 using BookVoyage.Persistence.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace BookVoyage.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230822041415_UpdateOrder")]
+    partial class UpdateOrder
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -253,7 +256,7 @@ namespace BookVoyage.Persistence.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("id");
 
-                    b.Property<Guid?>("OrderId")
+                    b.Property<Guid>("OrderId")
                         .HasColumnType("uuid")
                         .HasColumnName("order_id");
 
@@ -460,13 +463,13 @@ namespace BookVoyage.Persistence.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "e35e4004-75b5-4c40-aa07-eb1cbececac4",
+                            Id = "c711e1e0-5279-44e4-bd36-c46f39089d8f",
                             Name = "admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "b0b54704-0fff-47f7-ab2f-c9bf9639a03f",
+                            Id = "8c389dbd-8ef0-4be3-8ca0-82977e6d8731",
                             Name = "customer",
                             NormalizedName = "CUSTOMER"
                         });
@@ -716,6 +719,8 @@ namespace BookVoyage.Persistence.Migrations
                     b.HasOne("BookVoyage.Domain.Entities.OrderAggegate.Order", null)
                         .WithMany("OrderItems")
                         .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
                         .HasConstraintName("fk_order_item_orders_order_id");
 
                     b.OwnsOne("BookVoyage.Domain.Entities.OrderAggegate.BookOrderedItem", "BookOrderedItem", b1 =>

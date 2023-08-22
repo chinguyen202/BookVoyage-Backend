@@ -4,6 +4,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
+#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
+
 namespace BookVoyage.Persistence.Migrations
 {
     /// <inheritdoc />
@@ -58,8 +60,7 @@ namespace BookVoyage.Persistence.Migrations
                 columns: table => new
                 {
                     id = table.Column<Guid>(type: "uuid", nullable: false),
-                    first_name = table.Column<string>(type: "text", nullable: false),
-                    last_name = table.Column<string>(type: "text", nullable: false),
+                    full_name = table.Column<string>(type: "text", nullable: false),
                     publisher = table.Column<string>(type: "text", nullable: false),
                     created_at = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
                     modified_at = table.Column<DateTime>(type: "timestamp without time zone", nullable: false)
@@ -81,6 +82,29 @@ namespace BookVoyage.Persistence.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("pk_categories", x => x.id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "orders",
+                columns: table => new
+                {
+                    id = table.Column<Guid>(type: "uuid", nullable: false),
+                    subtotal = table.Column<double>(type: "double precision", nullable: false),
+                    total_quantity = table.Column<int>(type: "integer", nullable: false),
+                    order_status = table.Column<int>(type: "integer", nullable: false),
+                    stripe_payment_intent_id = table.Column<string>(type: "text", nullable: false),
+                    shipping_address_full_name = table.Column<string>(type: "text", nullable: false),
+                    shipping_address_street = table.Column<string>(type: "text", nullable: false),
+                    shipping_address_post_code = table.Column<string>(type: "text", nullable: false),
+                    shipping_address_state = table.Column<string>(type: "text", nullable: false),
+                    shipping_address_country = table.Column<string>(type: "text", nullable: false),
+                    buyer_id = table.Column<string>(type: "text", nullable: false),
+                    created_at = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    modified_at = table.Column<DateTime>(type: "timestamp without time zone", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("pk_orders", x => x.id);
                 });
 
             migrationBuilder.CreateTable(
@@ -204,6 +228,28 @@ namespace BookVoyage.Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "user_address",
+                columns: table => new
+                {
+                    id = table.Column<string>(type: "text", nullable: false),
+                    full_name = table.Column<string>(type: "text", nullable: false),
+                    street = table.Column<string>(type: "text", nullable: false),
+                    post_code = table.Column<string>(type: "text", nullable: false),
+                    state = table.Column<string>(type: "text", nullable: false),
+                    country = table.Column<string>(type: "text", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("pk_user_address", x => x.id);
+                    table.ForeignKey(
+                        name: "fk_user_address_asp_net_users_id",
+                        column: x => x.id,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "books",
                 columns: table => new
                 {
@@ -292,6 +338,43 @@ namespace BookVoyage.Persistence.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "order_item",
+                columns: table => new
+                {
+                    id = table.Column<Guid>(type: "uuid", nullable: false),
+                    book_name = table.Column<string>(type: "text", nullable: false),
+                    price = table.Column<double>(type: "double precision", nullable: false),
+                    quantity = table.Column<int>(type: "integer", nullable: false),
+                    book_id = table.Column<Guid>(type: "uuid", nullable: false),
+                    order_id = table.Column<Guid>(type: "uuid", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("pk_order_item", x => x.id);
+                    table.ForeignKey(
+                        name: "fk_order_item_books_book_id",
+                        column: x => x.book_id,
+                        principalTable: "books",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "fk_order_item_orders_order_id",
+                        column: x => x.order_id,
+                        principalTable: "orders",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.InsertData(
+                table: "AspNetRoles",
+                columns: new[] { "id", "concurrency_stamp", "name", "normalized_name" },
+                values: new object[,]
+                {
+                    { "3203f2d8-8309-497d-8bbd-ef54fcbc3126", null, "customer", "CUSTOMER" },
+                    { "601660c9-f970-4c38-b00b-e4c32b399927", null, "admin", "ADMIN" }
+                });
+
             migrationBuilder.CreateIndex(
                 name: "ix_asp_net_role_claims_role_id",
                 table: "AspNetRoleClaims",
@@ -358,6 +441,16 @@ namespace BookVoyage.Persistence.Migrations
                 name: "ix_cart_items_shopping_cart_id",
                 table: "cart_items",
                 column: "shopping_cart_id");
+
+            migrationBuilder.CreateIndex(
+                name: "ix_order_item_book_id",
+                table: "order_item",
+                column: "book_id");
+
+            migrationBuilder.CreateIndex(
+                name: "ix_order_item_order_id",
+                table: "order_item",
+                column: "order_id");
         }
 
         /// <inheritdoc />
@@ -385,19 +478,28 @@ namespace BookVoyage.Persistence.Migrations
                 name: "cart_items");
 
             migrationBuilder.DropTable(
-                name: "AspNetRoles");
+                name: "order_item");
 
             migrationBuilder.DropTable(
-                name: "AspNetUsers");
+                name: "user_address");
+
+            migrationBuilder.DropTable(
+                name: "AspNetRoles");
 
             migrationBuilder.DropTable(
                 name: "authors");
 
             migrationBuilder.DropTable(
+                name: "shopping_carts");
+
+            migrationBuilder.DropTable(
                 name: "books");
 
             migrationBuilder.DropTable(
-                name: "shopping_carts");
+                name: "orders");
+
+            migrationBuilder.DropTable(
+                name: "AspNetUsers");
 
             migrationBuilder.DropTable(
                 name: "categories");

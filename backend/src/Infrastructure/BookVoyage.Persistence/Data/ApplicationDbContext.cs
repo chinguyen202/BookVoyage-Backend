@@ -1,16 +1,21 @@
+using BookVoyage.Domain.Common;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Npgsql;
 
 using BookVoyage.Domain.Entities;
+using BookVoyage.Domain.Entities.OrderAggegate;
+using BookVoyage.Domain.Entities.UserAggegate;
+using BookVoyage.Utility.Constants;
+using Microsoft.AspNetCore.Identity;
 
 namespace BookVoyage.Persistence.Data;
 
 /// <summary>
 /// 
 /// </summary>
-public class ApplicationDbContext: IdentityDbContext<AppUser>
+public class ApplicationDbContext: IdentityDbContext<ApplicationUser>
 {
     private readonly IConfiguration _configuration;
 
@@ -23,6 +28,7 @@ public class ApplicationDbContext: IdentityDbContext<AppUser>
     public DbSet<Author> Authors { get; set; }
     public DbSet<ShoppingCart> ShoppingCarts { get; set; }
     public DbSet<CartItem> CartItems { get; set; }
+    public DbSet<Order> Orders { get; set; }
     
     static ApplicationDbContext()
     {
@@ -41,6 +47,18 @@ public class ApplicationDbContext: IdentityDbContext<AppUser>
     {
         base.OnModelCreating((builder));
         // Configuration
+
+        builder.Entity<IdentityRole>()
+            .HasData(
+                new IdentityRole {Name = SD.Admin, NormalizedName = "ADMIN"},
+                new IdentityRole {Name = SD.Customer, NormalizedName = "CUSTOMER"}
+            );
+
+        builder.Entity<ApplicationUser>()
+            .HasOne(u => u.Address)
+            .WithOne()
+            .HasForeignKey<UserAddress>(a => a.Id)
+            .OnDelete(DeleteBehavior.Cascade);
         
         builder.Entity<Book>(entity =>
         {

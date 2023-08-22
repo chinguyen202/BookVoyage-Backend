@@ -3,7 +3,7 @@
     <PropertyGroup>
         <TargetFramework>net7.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
-        <Nullable>enable</Nullable>
+        <Nullable>disable</Nullable>
     </PropertyGroup>
 
     <ItemGroup>
@@ -14,6 +14,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\..\Core\BookVoyage.Domain\BookVoyage.Domain.csproj" />
+      <ProjectReference Include="..\..\Shared\BookVoyage.Utility\BookVoyage.Utility.csproj" />
     </ItemGroup>
 
 
