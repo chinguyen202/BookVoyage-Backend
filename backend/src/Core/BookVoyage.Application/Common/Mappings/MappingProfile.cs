@@ -2,7 +2,9 @@ using AutoMapper;
 using BookVoyage.Application.Authors;
 using BookVoyage.Application.Books;
 using BookVoyage.Application.Categories;
+using BookVoyage.Application.Orders;
 using BookVoyage.Domain.Entities;
+using BookVoyage.Domain.Entities.OrderAggegate;
 
 namespace BookVoyage.Application.Common.Mappings;
 
@@ -14,8 +16,6 @@ public class MappingProfile: Profile
         CreateMap<CategoryDto, Category>();
         CreateMap<Author, AuthorDto>();
         CreateMap<AuthorDto, Author>();
-        // CreateMap<Author, AuthorEditDto>();
-        // CreateMap<AuthorEditDto, Author>();
         CreateMap<Book, BookDto>()
             .ForMember(dest => dest.Category
                 , opt => opt.MapFrom(src => new CategoryDto
@@ -27,8 +27,8 @@ public class MappingProfile: Profile
                 , opt => opt.MapFrom(src => src.Authors.Select(author => new AuthorDto
             {
                 Id = author.Id,
-                FirstName = author.FirstName,
-                LastName = author.LastName,
+                
+                FullName = author.FullName,
                 Publisher = author.Publisher
             }).ToList()));
         CreateMap<BookDto, Book>();

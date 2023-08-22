@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-using BookVoyage.Domain.Entities;
+using BookVoyage.Domain.Entities.UserAggegate;
 using BookVoyage.Utility.Constants;
 using BookVoyage.WebApi.DTOs;
 using BookVoyage.WebApi.Services;
@@ -16,11 +16,11 @@ namespace BookVoyage.WebApi.Controllers;
 [ApiController]
 public class AccountController: ControllerBase
 {
-    private readonly UserManager<AppUser> _userManager;
+    private readonly UserManager<ApplicationUser> _userManager;
     private readonly RoleManager<IdentityRole> _roleManager;
     private readonly TokenService _tokenService;
 
-    public AccountController(UserManager<AppUser> userManager, TokenService tokenService, RoleManager<IdentityRole> roleManager)
+    public AccountController(UserManager<ApplicationUser> userManager, TokenService tokenService, RoleManager<IdentityRole> roleManager)
     {
         _userManager = userManager;
         _tokenService = tokenService;
@@ -63,7 +63,7 @@ public class AccountController: ControllerBase
         {
             return BadRequest("Email is already used. ");
         }
-        var user = new AppUser
+        var user = new ApplicationUser
         {
             UserName = registerDto.Username,
             Email = registerDto.Email,
@@ -91,7 +91,7 @@ public class AccountController: ControllerBase
     }
     
     // Creates a response object for user authentication 
-    private LoginResponseDto CreateUserObject(AppUser user)
+    private LoginResponseDto CreateUserObject(ApplicationUser user)
     {
         return new LoginResponseDto
         {

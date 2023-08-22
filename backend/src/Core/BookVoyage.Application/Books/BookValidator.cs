@@ -17,6 +17,7 @@ public class BookValidator: AbstractValidator<BookUpsertDto>
         RuleFor(x => x.UnitPrice).NotEmpty().GreaterThan(0).LessThanOrEqualTo(1000);
         RuleFor(x => x.UnitInStock).NotEmpty().GreaterThanOrEqualTo(0);
         RuleFor(x => x.YearOfPublished).LessThanOrEqualTo(DateTime.UtcNow.Year).GreaterThanOrEqualTo(1500);
+        RuleFor(x => x.File).NotEmpty();
         
         // Apply BeUniqueBook rule only during creation (when Id is not set)
         RuleFor(x => x)

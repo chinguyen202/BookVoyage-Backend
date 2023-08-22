@@ -21,13 +21,6 @@ public class BlobService: IBlobService
         return blobClient.Uri.AbsoluteUri;
     }
 
-    public async Task<bool> DeleteBlob(string blobName, string containerName)
-    {
-        BlobContainerClient blobContainerClient = _blobClient.GetBlobContainerClient(containerName);
-        BlobClient blobClient = blobContainerClient.GetBlobClient(blobName);
-        return await blobClient.DeleteIfExistsAsync();
-    }
-
     public async Task<string> UploadBlob(string blobName, string containerName, IFormFile file)
     {
         BlobContainerClient blobContainerClient = _blobClient.GetBlobContainerClient(containerName);

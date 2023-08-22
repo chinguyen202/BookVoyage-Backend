@@ -12,8 +12,7 @@ public abstract class AuthorBaseValidator<T> : AbstractValidator<T>
     {
         _dbContext = dbContext;
 
-        RuleFor(x => x.FirstName).NotEmpty();
-        RuleFor(x => x.LastName).NotEmpty();
+        RuleFor(x => x.FullName).NotEmpty();
         RuleFor(x => x.Publisher).NotEmpty();
         RuleFor(x => x).Must(BeUniqueAuthor).WithMessage("Author with the same name and publisher already exists.");
     }
@@ -21,9 +20,8 @@ public abstract class AuthorBaseValidator<T> : AbstractValidator<T>
     protected bool BeUniqueAuthor(T author)
     {
         var existingAuthors = _dbContext.Authors
-            .Where(a => a.FirstName == author.FirstName && a.LastName == author.LastName && a.Publisher == author.Publisher)
+            .Where(a => a.FullName == author.FullName  && a.Publisher == author.Publisher)
             .ToList();
         return existingAuthors.Count == 0;
     }
 }
-

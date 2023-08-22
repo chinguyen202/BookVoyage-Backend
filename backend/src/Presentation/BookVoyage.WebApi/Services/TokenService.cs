@@ -3,6 +3,7 @@ using System.Security.Claims;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
 using BookVoyage.Domain.Entities;
+using BookVoyage.Domain.Entities.UserAggegate;
 
 namespace BookVoyage.WebApi.Services;
 
@@ -14,7 +15,7 @@ public class TokenService
     {
         _config = config;
     }
-    public string CreateToken(AppUser user)
+    public string CreateToken(ApplicationUser user)
     {
         var claims = new List<Claim>
         {

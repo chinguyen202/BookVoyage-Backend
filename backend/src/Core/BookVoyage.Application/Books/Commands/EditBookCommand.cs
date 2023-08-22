@@ -71,7 +71,6 @@ public class EditBookCommandHandler : IRequestHandler<EditBookCommand, ApiResult
         if (request.BookEditDto.File != null && request.BookEditDto.File.Length > 0)
         {
             var fileName = $"{Guid.NewGuid()}{Path.GetExtension(request.BookEditDto.File.FileName)}";
-            await _blobService.DeleteBlob(bookFromDb.ImageUrl.Split("/").Last(), SD.SdStorageContainer);
             bookFromDb.ImageUrl = await _blobService.UploadBlob(fileName, SD.SdStorageContainer,
                 request.BookEditDto.File);
         }

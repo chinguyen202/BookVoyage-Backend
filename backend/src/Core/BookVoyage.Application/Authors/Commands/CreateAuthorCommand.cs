@@ -1,9 +1,10 @@
 using AutoMapper;
+using FluentValidation;
+using MediatR;
+
 using BookVoyage.Application.Common;
 using BookVoyage.Domain.Entities;
 using BookVoyage.Persistence.Data;
-using FluentValidation;
-using MediatR;
 
 namespace BookVoyage.Application.Authors.Commands;
 

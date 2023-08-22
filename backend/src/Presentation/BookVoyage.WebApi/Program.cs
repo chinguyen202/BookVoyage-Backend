@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 
 using BookVoyage.Application.Common.Extensions;
 using BookVoyage.Domain.Entities;
+using BookVoyage.Domain.Entities.UserAggegate;
 using BookVoyage.Infrastructure;
 using BookVoyage.Persistence.Data;
 using BookVoyage.Persistence.Extensions;
@@ -54,7 +55,7 @@ var services = scope.ServiceProvider;
 try
 {
     var context = services.GetRequiredService<ApplicationDbContext>();
-    var userManger = services.GetRequiredService<UserManager<AppUser>>();
+    var userManger = services.GetRequiredService<UserManager<ApplicationUser>>();
     await context.Database.MigrateAsync();
     await Seed.SeedData(context, userManger);
 }

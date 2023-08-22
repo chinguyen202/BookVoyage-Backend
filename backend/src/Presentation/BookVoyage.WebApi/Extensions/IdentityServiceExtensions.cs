@@ -1,5 +1,6 @@
 using System.Text;
 using BookVoyage.Domain.Entities;
+using BookVoyage.Domain.Entities.UserAggegate;
 using BookVoyage.Persistence.Data;
 using BookVoyage.WebApi.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -12,7 +13,7 @@ public static class IdentityServiceExtensions
 {
     public static IServiceCollection AddIdentityServices(this IServiceCollection services, IConfiguration config)
     {
-        services.AddIdentityCore<AppUser>(options =>
+        services.AddIdentityCore<ApplicationUser>(options =>
             {
                 options.Password.RequireNonAlphanumeric = false;
                 options.User.RequireUniqueEmail = true;
