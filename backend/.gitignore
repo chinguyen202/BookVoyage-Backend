@@ -478,7 +478,7 @@ $RECYCLE.BIN/
 
 # Rider
 .idea/
-
+.vscode/
 #development 
 src/Presentation/BookVoyage.WebApi/appsettings.json
 src/Presentation/BookVoyage.WebApi/appsettings.Development.json
