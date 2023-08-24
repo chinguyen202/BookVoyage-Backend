@@ -1,7 +1,7 @@
-using BookVoyage.Persistence.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using BookVoyage.Persistence.Data;
 
 namespace BookVoyage.Persistence.Extensions;
 
@@ -17,8 +17,7 @@ public static class IServiceCollectionExtensions
         var connectionString = configuration.GetConnectionString("DefaultConnection");
         services.AddDbContext<ApplicationDbContext>(options =>
         {
-            options.UseNpgsql(connectionString,
-                builder => builder.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.FullName));
+            options.UseNpgsql(connectionString);
         });
     }
 }

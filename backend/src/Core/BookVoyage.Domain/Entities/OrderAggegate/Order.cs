@@ -8,7 +8,7 @@ public class Order: AuditableBaseEntity
     
     public double Subtotal { get; set; }
     public int TotalQuantity { get; set; }
-    public OrderStatus OrderStatus { get; set; }
+    public OrderStatus OrderStatus { get; set; } = OrderStatus.Pending;
     public string StripePaymentIntentId { get; set; }
     public ShippingAddress ShippingAddress { get; set; }
     public string BuyerId { get; set; }

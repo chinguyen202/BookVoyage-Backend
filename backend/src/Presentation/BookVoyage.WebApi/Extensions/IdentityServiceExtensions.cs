@@ -1,5 +1,4 @@
 using System.Text;
-using BookVoyage.Domain.Entities;
 using BookVoyage.Domain.Entities.UserAggegate;
 using BookVoyage.Persistence.Data;
 using BookVoyage.WebApi.Services;
