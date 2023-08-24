@@ -78,6 +78,7 @@ public class AccountController: ControllerBase
         var result = await _userManager.CreateAsync(user, registerDto.Password);
         if (result.Succeeded)
         {
+            await _userManager.AddToRoleAsync(user, SD.Customer);
             var responseDto =await CreateUserObject(user);
             return ApiResult<LoginResponseDto>.Success(responseDto);
         }
