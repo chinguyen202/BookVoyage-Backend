@@ -16,29 +16,29 @@ public class AuthorsController: BaseApiController
 {
     //  Get all Author
     [AllowAnonymous]
-    [HttpGet(ApiEndpoints.Authors.GetAll)]
+    [HttpGet(ApiEndpoints.V1.Authors.GetAll)]
     public async Task<IActionResult> GetAuthors()
     {
         return HandleResult(await Mediator.Send(new GetAllAuthorsQuery())) ;
     }
     //  Get a specific Author
     [AllowAnonymous]
-    [HttpGet(ApiEndpoints.Authors.Get)]
+    [HttpGet(ApiEndpoints.V1.Authors.Get)]
     public async Task<IActionResult> GetAuthor(Guid id)
     {
         return HandleResult(await Mediator.Send(new GetAuthorQuery { Id = id }));
     }
     //  Create a Author
-    [AllowAnonymous] // For development only
-    [HttpPost(ApiEndpoints.Authors.Create)]
+    [Authorize(Roles = SD.Admin)]
+    [HttpPost(ApiEndpoints.V1.Authors.Create)]
     public async Task<IActionResult> CreateAuthor(AuthorDto authorDto)
     {
         return HandleResult(await Mediator.Send(new CreateAuthorCommand { AuthorDto = authorDto }));
     }
     
     // Update a Author
-    [AllowAnonymous] // For development only
-    [HttpPut(ApiEndpoints.Authors.Update)]
+    [Authorize(Roles = SD.Admin)]
+    [HttpPut(ApiEndpoints.V1.Authors.Update)]
     public async Task<IActionResult> EditAuthor(Guid id, AuthorDto authorEditDto)
     {
         authorEditDto.Id = id;
@@ -46,8 +46,8 @@ public class AuthorsController: BaseApiController
     }
     
     // Delete a Author
-    [AllowAnonymous] // For development only
-    [HttpDelete(ApiEndpoints.Authors.Delete)]
+    [Authorize(Roles = SD.Admin)]
+    [HttpDelete(ApiEndpoints.V1.Authors.Delete)]
     public async Task<IActionResult> DeleteAuthor(Guid id)
     {
         return HandleResult(await Mediator.Send(new DeleteAuthorCommand{Id = id}));

@@ -1,6 +1,7 @@
-using BookVoyage.Application.Common;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+
+using BookVoyage.Application.Common;
 
 namespace BookVoyage.WebApi.Controllers;
 

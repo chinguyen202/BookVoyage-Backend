@@ -33,7 +33,7 @@ public class AccountController: ControllerBase
     /// <param name="loginDto"></param>
     /// <returns></returns>
     [AllowAnonymous]
-    [HttpPost(ApiEndpoints.Auth.Login)]
+    [HttpPost(ApiEndpoints.V1.Auth.Login)]
     public async Task<ActionResult<LoginResponseDto>> Login(LoginDto loginDto)
     {
         var user = await _userManager.FindByEmailAsync(loginDto.Email);
@@ -52,7 +52,7 @@ public class AccountController: ControllerBase
     /// <param name="registerDto"></param>
     /// <returns></returns>
     [AllowAnonymous]
-    [HttpPost(ApiEndpoints.Users.Create)]
+    [HttpPost(ApiEndpoints.V1.Users.Create)]
     public async Task<ActionResult<LoginResponseDto>> Register(RegisterDto registerDto)
     {
         if (await _userManager.Users.AnyAsync(x => x.UserName == registerDto.Username))
@@ -83,7 +83,7 @@ public class AccountController: ControllerBase
     /// </summary>
     /// <returns></returns>
     [Authorize]
-    [HttpGet(ApiEndpoints.Users.Get)]
+    [HttpGet(ApiEndpoints.V1.Users.Get)]
     public async Task<ActionResult<LoginResponseDto>> GetCurrentUser()
     {
         var user = await _userManager.FindByEmailAsync(User.FindFirstValue(ClaimTypes.Email));

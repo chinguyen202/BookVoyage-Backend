@@ -4,9 +4,12 @@ public static class ApiEndpoints
 {
     private const string ApiBase = "api";
 
-    public static class Categories
+    public static class V1
     {
-        private const string Base = $"{ApiBase}/categories";
+        private const string VersionBase = $"{ApiBase}/v1";
+        public static class Categories
+    {
+        private const string Base = $"{VersionBase}/categories";
         public const string Create = Base;
         public const string Get = $"{Base}/{{id:guid}}";
         public const string GetAll = Base;
@@ -16,7 +19,7 @@ public static class ApiEndpoints
 
     public static class Authors
     {
-        private const string Base = $"{ApiBase}/authors";
+        private const string Base = $"{VersionBase}/authors";
         public const string Create = Base;
         public const string Get = $"{Base}/{{id:guid}}";
         public const string GetAll = Base;
@@ -26,7 +29,7 @@ public static class ApiEndpoints
     
     public static class Books
     {
-        private const string Base = $"{ApiBase}/books";
+        private const string Base = $"{VersionBase}/books";
         public const string Create = Base;
         public const string Get = $"{Base}/{{id:guid}}";
         public const string GetAll = Base;
@@ -38,13 +41,13 @@ public static class ApiEndpoints
 
     public static class Auth
     {
-        private const string Base = $"{ApiBase}/auth";
+        private const string Base = $"{VersionBase}/auth";
         public const string Login = $"{Base}/login";
     }
 
     public static class Users
     {
-        private const string Base = $"{ApiBase}/users";
+        private const string Base = $"{VersionBase}/users";
         public const string Create = $"{Base}/register";
         public const string Get = Base;
         public const string GetAll = Base;
@@ -54,16 +57,20 @@ public static class ApiEndpoints
 
     public static class ShoppingCart
     {
-        private const string Base = $"{ApiBase}/cart";
+        private const string Base = $"{VersionBase}/cart";
         public const string UpsertItem = Base;
-        public const string Get = $"{Base}/{{id:alpha}}";
+        public const string Get = $"{Base}/{{id:guid}}";
     }
 
     public static class Orders
     {
-        private const string Base = $"{ApiBase}/orders";
+        private const string Base = $"{VersionBase}/orders";
         public const string Create = Base;
-        public const string GetByUserId = Base;
+        public const string GetByUserId = $"{Base}/users/{{id:guid}}";
         public const string GetByOrderId = $"{Base}/{{id:guid}}";
+        public const string Update = $"{Base}/{{id:guid}}";
     }
+    }
+
+    
 }

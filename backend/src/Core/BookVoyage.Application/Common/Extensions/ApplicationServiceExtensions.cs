@@ -12,7 +12,7 @@ public static class ApplicationServiceExtensions
 {
     public static IServiceCollection AddApplicationServices(this IServiceCollection services)
     {
-        services.AddMediatR(Assembly.GetExecutingAssembly());
+        services.AddMediatR(BookVoyage.Application.AssemblyReference.Assembly);
         services.AddAutoMapper(typeof(MappingProfile).Assembly);
         services.AddValidatorsFromAssemblyContaining<IApplicationAssemblyMarker>();
         services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidatorBehavior<,>));

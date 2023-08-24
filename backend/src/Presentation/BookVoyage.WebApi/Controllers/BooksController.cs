@@ -15,21 +15,21 @@ public class BooksController: BaseApiController
 {
     //  Get all Book
     [AllowAnonymous]
-    [HttpGet(ApiEndpoints.Books.GetAll)]
+    [HttpGet(ApiEndpoints.V1.Books.GetAll)]
     public async Task<IActionResult> GetAllBook()
     {
         return HandleResult(await Mediator.Send(new GetAllBooksQuery())) ;
     }
     //  Get a specific Book
     [AllowAnonymous]
-    [HttpGet(ApiEndpoints.Books.Get)]
+    [HttpGet(ApiEndpoints.V1.Books.Get)]
     public async Task<IActionResult> GetBook(Guid id)
     {
         return HandleResult(await Mediator.Send(new GetBookQuery { Id = id }));
     }
     //  Create a Book
     [AllowAnonymous]
-    [HttpPost(ApiEndpoints.Books.Create)]
+    [HttpPost(ApiEndpoints.V1.Books.Create)]
     public async Task<IActionResult> CreateBook([FromForm]BookUpsertDto bookDto)
     {
         return HandleResult(await Mediator.Send(new CreateBookCommand { BookUpsertDto = bookDto }));
@@ -37,7 +37,7 @@ public class BooksController: BaseApiController
     
     // Update a Book
     [AllowAnonymous]
-    [HttpPut(ApiEndpoints.Books.Update)]
+    [HttpPut(ApiEndpoints.V1.Books.Update)]
     public async Task<IActionResult> EditBook(Guid id, [FromForm]BookUpsertDto bookEditDto)
     {
         bookEditDto.Id = id;
@@ -46,7 +46,7 @@ public class BooksController: BaseApiController
     
     // Delete a Book
     [AllowAnonymous]
-    [HttpDelete(ApiEndpoints.Books.Delete)]
+    [HttpDelete(ApiEndpoints.V1.Books.Delete)]
     public async Task<IActionResult> DeleteBook(Guid id)
     {
         return HandleResult(await Mediator.Send(new DeleteBookCommand{Id = id}));
@@ -54,7 +54,7 @@ public class BooksController: BaseApiController
     
     // Get list of books by category
     [AllowAnonymous]
-    [HttpGet(ApiEndpoints.Books.GetByCategory)]
+    [HttpGet(ApiEndpoints.V1.Books.GetByCategory)]
     public async Task<IActionResult> GetByCategory(Guid categoryId)
     {
         return HandleResult(await Mediator.Send(new GetBooksByCategoryQuery { Id = categoryId }));
@@ -62,7 +62,7 @@ public class BooksController: BaseApiController
     
     // Get list of books by author
     [AllowAnonymous]
-    [HttpGet(ApiEndpoints.Books.GetByAuthor)]
+    [HttpGet(ApiEndpoints.V1.Books.GetByAuthor)]
     public async Task<IActionResult> GetByAuthor(Guid authorId)
     {
         return HandleResult(await Mediator.Send(new GetBooksByAuthorQuery { Id = authorId }));
