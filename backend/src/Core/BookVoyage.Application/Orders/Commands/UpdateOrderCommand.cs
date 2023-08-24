@@ -1,5 +1,6 @@
 using AutoMapper;
 using BookVoyage.Application.Common;
+using BookVoyage.Domain.Entities.OrderAggegate;
 using BookVoyage.Persistence.Data;
 using MediatR;
 
@@ -23,13 +24,15 @@ public class UpdateOrderCommandHandler : IRequestHandler<UpdateOrderCommand, Api
 
     public async Task<ApiResult<Unit>> Handle(UpdateOrderCommand request, CancellationToken cancellationToken)
     {
+        // Check the order id
         var orderInDb = _context.Orders.FirstOrDefault(u => u.Id == request.OrderUpdatedDto.OrderId);
         if (orderInDb == null)
         {
             return ApiResult<Unit>.Failure("The order does not exist");
         }
 
-        orderInDb.OrderStatus = request.OrderUpdatedDto.OrderStatus;
+        var orderUpdate = _mapper.Map<Order>(request.OrderUpdatedDto);
+        orderInDb.OrderStatus = orderUpdate.OrderStatus;
         var result = await _context.SaveChangesAsync() > 0;
         if (!result)
         {

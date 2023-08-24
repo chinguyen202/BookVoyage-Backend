@@ -1,31 +1,49 @@
-using BookVoyage.Application.Common;
-using BookVoyage.Domain.Entities.OrderAggegate;
-using BookVoyage.Persistence.Data;
+using AutoMapper;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
+using BookVoyage.Application.Common;
+using BookVoyage.Persistence.Data;
+
+
 namespace BookVoyage.Application.Orders.Queries;
 
-public record GetOrderByIdQuery: IRequest<ApiResult<Order>>
+/// <summary>
+/// Represents a query and its handler to retrieve an order by its ID.
+/// </summary>
+public record GetOrderByIdQuery: IRequest<ApiResult<OrderDto>>
 {
     public Guid OrderId { get; set; }
 }
 
-public class GetOrderByIdQueryHandler : IRequestHandler<GetOrderByIdQuery, ApiResult<Order>>
+public class GetOrderByIdQueryHandler : IRequestHandler<GetOrderByIdQuery, ApiResult<OrderDto>>
 {
     private readonly ApplicationDbContext _dbContext;
+    private readonly IMapper _mapper;
 
-    public GetOrderByIdQueryHandler(ApplicationDbContext dbContext)
+    public GetOrderByIdQueryHandler(ApplicationDbContext dbContext, IMapper mapper)
     {
         _dbContext = dbContext;
+        _mapper = mapper;
     }
-    public async Task<ApiResult<Order>> Handle(GetOrderByIdQuery request, CancellationToken cancellationToken)
+    public async Task<ApiResult<OrderDto>> Handle(GetOrderByIdQuery request, CancellationToken cancellationToken)
     {
         if (request.OrderId == Guid.Empty)
-            return ApiResult<Order>.Failure("Failed to get the order");
-        return ApiResult<Order>.Success(await _dbContext.Orders
+        {
+            return ApiResult<OrderDto>.Failure("Failed to get the order");
+        }
+
+        var orderInDb = await _dbContext.Orders
             .Include(x => x.OrderItems)
             .Where(u => u.Id == request.OrderId)
-            .FirstOrDefaultAsync());
+            .FirstOrDefaultAsync();
+
+        if (orderInDb == null)
+        {
+            return ApiResult<OrderDto>.Failure("Order not found");
+        }
+
+        var orderFound = _mapper.Map<OrderDto>(orderInDb);
+        return ApiResult<OrderDto>.Success(orderFound);
     }
 }

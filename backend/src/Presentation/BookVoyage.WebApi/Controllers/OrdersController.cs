@@ -1,3 +1,4 @@
+using BookVoyage.Application.Common;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -8,7 +9,7 @@ using BookVoyage.Utility.Constants;
 namespace BookVoyage.WebApi.Controllers;
 
 /// <summary>
-/// 
+/// Order endpoint
 /// </summary>
 public class OrdersController: BaseApiController
 {
@@ -38,18 +39,9 @@ public class OrdersController: BaseApiController
     
     // Update an order
     [AllowAnonymous]
-    [HttpPut(ApiEndpoints.V1.Orders.Update)]
+    [HttpPut(ApiEndpoints.V1.Orders.UpdateStatus)]
     public async Task<IActionResult> UpdateOrder(Guid id, [FromBody] OrderUpdatedDto orderUpdatedDto)
     {
-        if (id == Guid.Empty)
-        {
-            return BadRequest("Invalid order ID");
-        }
-
-        if (orderUpdatedDto == null || orderUpdatedDto.OrderId != id)
-        {
-            return BadRequest("Invalid order data");
-        }
         return HandleResult(await Mediator.Send(new UpdateOrderCommand { OrderUpdatedDto = orderUpdatedDto }));
     }
 }
