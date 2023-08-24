@@ -1,5 +1,8 @@
 namespace BookVoyage.Application.Common.Exceptions;
 
+/// <summary>
+/// Standardized exception objects with status code, message, and details.
+/// </summary>
 public class AppException
 {
     public AppException(int statusCode, string message, string details = null)

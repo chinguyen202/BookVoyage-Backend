@@ -15,7 +15,7 @@ namespace BookVoyage.Persistence.Data;
 /// <summary>
 /// 
 /// </summary>
-public class ApplicationDbContext: IdentityDbContext<ApplicationUser>
+public class ApplicationDbContext: IApplicationDbContext
 {
     private readonly IConfiguration _configuration;
 
@@ -45,6 +45,7 @@ public class ApplicationDbContext: IdentityDbContext<ApplicationUser>
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
+        
         base.OnModelCreating((builder));
         // Configuration
 

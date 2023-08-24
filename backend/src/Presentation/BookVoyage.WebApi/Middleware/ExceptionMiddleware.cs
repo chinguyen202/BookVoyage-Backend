@@ -1,9 +1,15 @@
 using System.Net;
 using System.Text.Json;
+
 using BookVoyage.Application.Common.Exceptions;
 
 namespace BookVoyage.WebApi.Middleware;
 
+
+/// <summary>
+/// Custom middleware responsible for catching unhandled exceptions that might occur during the request processing pipeline
+/// and responding with an appropriate error message in JSON format. 
+/// </summary>
 public class ExceptionMiddleware
 {
     private readonly RequestDelegate _next;
