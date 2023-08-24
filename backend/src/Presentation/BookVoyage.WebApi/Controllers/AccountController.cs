@@ -1,4 +1,5 @@
 using System.Security.Claims;
+using BookVoyage.Application.Common;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -34,16 +35,20 @@ public class AccountController: ControllerBase
     /// <returns></returns>
     [AllowAnonymous]
     [HttpPost(ApiEndpoints.V1.Auth.Login)]
-    public async Task<ActionResult<LoginResponseDto>> Login(LoginDto loginDto)
+    public async Task<ActionResult<ApiResult<LoginResponseDto>>> Login(LoginDto loginDto)
     {
         var user = await _userManager.FindByEmailAsync(loginDto.Email);
-        if (user == null) return Unauthorized();
+        if (user == null)
+        {
+            return ApiResult<LoginResponseDto>.Failure("The user doesn't exist. Please check your email again!");
+        }
         var result = await _userManager.CheckPasswordAsync(user, loginDto.Password);
         if (result)
         {
-            return CreateUserObject(user);
+            var responseDto =await  CreateUserObject(user);
+            return ApiResult<LoginResponseDto>.Success(responseDto);
         }
-        return Unauthorized();
+        return ApiResult<LoginResponseDto>.Failure("Invalid email or password");
     }
     
     /// <summary>
@@ -53,15 +58,15 @@ public class AccountController: ControllerBase
     /// <returns></returns>
     [AllowAnonymous]
     [HttpPost(ApiEndpoints.V1.Users.Create)]
-    public async Task<ActionResult<LoginResponseDto>> Register(RegisterDto registerDto)
+    public async Task<ActionResult<ApiResult<LoginResponseDto>>> Register(RegisterDto registerDto)
     {
         if (await _userManager.Users.AnyAsync(x => x.UserName == registerDto.Username))
         {
-            return BadRequest("Username is already taken.");
+            return ApiResult<LoginResponseDto>.Failure("Username is already exist.");
         }
         if (await _userManager.Users.AnyAsync(x => x.Email == registerDto.Email))
         {
-            return BadRequest("Email is already used. ");
+            return ApiResult<LoginResponseDto>.Failure(("Email is already used."));
         }
         var user = new ApplicationUser
         {
@@ -73,30 +78,22 @@ public class AccountController: ControllerBase
         var result = await _userManager.CreateAsync(user, registerDto.Password);
         if (result.Succeeded)
         {
-            return CreateUserObject(user);
+            var responseDto =await CreateUserObject(user);
+            return ApiResult<LoginResponseDto>.Success(responseDto);
         }
-        return BadRequest(result.Errors);
-    }
 
-    /// <summary>
-    /// Get the current user with token
-    /// </summary>
-    /// <returns></returns>
-    [Authorize]
-    [HttpGet(ApiEndpoints.V1.Users.Get)]
-    public async Task<ActionResult<LoginResponseDto>> GetCurrentUser()
-    {
-        var user = await _userManager.FindByEmailAsync(User.FindFirstValue(ClaimTypes.Email));
-        return CreateUserObject(user);
+        return ApiResult<LoginResponseDto>.Failure(result.Errors.ToString());
     }
     
     // Creates a response object for user authentication 
-    private LoginResponseDto CreateUserObject(ApplicationUser user)
+    private async Task<LoginResponseDto> CreateUserObject(ApplicationUser user)
     {
+        var token = await _tokenService.CreateToken(user);
+        var userRoles = await _userManager.GetRolesAsync(user);
         return new LoginResponseDto
         {
             UserName = user.UserName,
-            Token = _tokenService.CreateToken(user)
+            Token = token
         };
     }
 }
