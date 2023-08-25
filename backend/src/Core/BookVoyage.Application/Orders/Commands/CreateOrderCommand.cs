@@ -36,7 +36,7 @@ public class CreateOrderCommandHandler : IRequestHandler<CreateOrderCommand, Api
             .FirstOrDefaultAsync(u => u.BuyerId == request.UserId);
         if (shoppingCart == null)
         {
-            return ApiResult<Unit>.Failure("Can't find the shopping cart");
+            return ApiResult<Unit>.Failure("User doesn't have any shopping cart");
         }
         // Convert the shopping cart item to order item
         var items = new List<OrderItem>();
@@ -97,7 +97,7 @@ public class CreateOrderCommandHandler : IRequestHandler<CreateOrderCommand, Api
         var result = await _dbContext.SaveChangesAsync() > 0;
         if (!result)
         {
-            return ApiResult<Unit>.Failure("Can not create order.");
+            return ApiResult<Unit>.Failure("Error when trying to create an order");
         }
         return ApiResult<Unit>.Success(Unit.Value);
     }

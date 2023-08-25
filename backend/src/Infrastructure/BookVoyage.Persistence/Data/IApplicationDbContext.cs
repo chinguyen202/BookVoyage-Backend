@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BookVoyage.Persistence.Data;
 
-public class IApplicationDbContext: IdentityDbContext<ApplicationUser>
+public interface IApplicationDbContext
 {
     public DbSet<Category> Categories { get; set; }
     public DbSet<Book> Books { get; set; }
@@ -14,4 +14,6 @@ public class IApplicationDbContext: IdentityDbContext<ApplicationUser>
     public DbSet<ShoppingCart> ShoppingCarts { get; set; }
     public DbSet<CartItem> CartItems { get; set; }
     public DbSet<Order> Orders { get; set; }
+
+    Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
 }

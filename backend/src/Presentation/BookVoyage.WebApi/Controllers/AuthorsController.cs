@@ -29,7 +29,7 @@ public class AuthorsController: BaseApiController
         return HandleResult(await Mediator.Send(new GetAuthorQuery { Id = id }));
     }
     //  Create a Author
-    [Authorize(Roles = SD.Admin)]
+    [AllowAnonymous]
     [HttpPost(ApiEndpoints.V1.Authors.Create)]
     public async Task<IActionResult> CreateAuthor(AuthorDto authorDto)
     {
@@ -39,7 +39,7 @@ public class AuthorsController: BaseApiController
     // Update a Author
     [Authorize(Roles = SD.Admin)]
     [HttpPut(ApiEndpoints.V1.Authors.Update)]
-    public async Task<IActionResult> EditAuthor(Guid id, AuthorDto authorEditDto)
+    public async Task<IActionResult> EditAuthor(Guid id, AuthorEditDto authorEditDto)
     {
         authorEditDto.Id = id;
         return HandleResult(await Mediator.Send(new EditAuthorCommand { AuthorEditDto = authorEditDto }));

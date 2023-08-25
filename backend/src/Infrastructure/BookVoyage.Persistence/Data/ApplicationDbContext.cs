@@ -1,3 +1,4 @@
+using System.Reflection;
 using BookVoyage.Domain.Common;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -15,11 +16,11 @@ namespace BookVoyage.Persistence.Data;
 /// <summary>
 /// 
 /// </summary>
-public class ApplicationDbContext: IApplicationDbContext
+public class ApplicationDbContext:  IdentityDbContext<ApplicationUser>,IApplicationDbContext
 {
     private readonly IConfiguration _configuration;
 
-    public ApplicationDbContext(DbContextOptions options, IConfiguration configuration)
+    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options, IConfiguration configuration): base(options)
     {
         _configuration = configuration;
     }
@@ -38,14 +39,13 @@ public class ApplicationDbContext: IApplicationDbContext
     
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        var builder = new NpgsqlDataSourceBuilder(_configuration.GetConnectionString("DefaultConnection"));
         optionsBuilder.AddInterceptors(new TimeStampInterceptor());
-        optionsBuilder.UseNpgsql(builder.Build()).UseSnakeCaseNamingConvention();
+        optionsBuilder.UseSnakeCaseNamingConvention();
     }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
-        
+        builder.ApplyConfigurationsFromAssembly(typeof(ApplicationDbContext).Assembly);
         base.OnModelCreating((builder));
         // Configuration
 

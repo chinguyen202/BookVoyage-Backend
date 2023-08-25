@@ -25,7 +25,7 @@ public class MappingProfile: Profile
                 Name = src.Category.Name
             }))            
             .ForMember(dest => dest.Authors
-                , opt => opt.MapFrom(src => src.Authors.Select(author => new AuthorDto
+                , opt => opt.MapFrom(src => src.Authors.Select(author => new AuthorEditDto
             {
                 Id = author.Id,
                 

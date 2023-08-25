@@ -1,9 +1,13 @@
+using MediatR;
+
 using BookVoyage.Application.Common;
 using BookVoyage.Persistence.Data;
-using MediatR;
 
 namespace BookVoyage.Application.Authors.Commands;
 
+/// <summary>
+/// Command and its handler to delete an author
+/// </summary>
 public record DeleteAuthorCommand: IRequest<ApiResult<Unit>>
 {
     public Guid Id { get; set; }
@@ -11,9 +15,9 @@ public record DeleteAuthorCommand: IRequest<ApiResult<Unit>>
 
 public class DeleteAuthorCommandHandler : IRequestHandler<DeleteAuthorCommand, ApiResult<Unit>>
 {
-    private readonly ApplicationDbContext _dbContext;
+    private readonly IApplicationDbContext _dbContext;
 
-    public DeleteAuthorCommandHandler(ApplicationDbContext dbContext)
+    public DeleteAuthorCommandHandler(IApplicationDbContext dbContext)
     {
         _dbContext = dbContext;
     }
@@ -21,7 +25,7 @@ public class DeleteAuthorCommandHandler : IRequestHandler<DeleteAuthorCommand, A
     {
         var author = await _dbContext.Authors.FindAsync(request.Id);
         if (author == null) return null;
-        _dbContext.Remove(author);
+        _dbContext.Authors.Remove(author);
         var result = await _dbContext.SaveChangesAsync() > 0;
         if (!result) return ApiResult<Unit>.Failure("Fail to delete the author");
         return ApiResult<Unit>.Success(Unit.Value);
