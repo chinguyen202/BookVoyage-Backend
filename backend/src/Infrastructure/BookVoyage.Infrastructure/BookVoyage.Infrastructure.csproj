@@ -13,7 +13,6 @@
 
     <ItemGroup>
       <ProjectReference Include="..\..\Core\BookVoyage.Application\BookVoyage.Application.csproj" />
-      <ProjectReference Include="..\..\Core\BookVoyage.Domain\BookVoyage.Domain.csproj" />
     </ItemGroup>
 
 </Project>
