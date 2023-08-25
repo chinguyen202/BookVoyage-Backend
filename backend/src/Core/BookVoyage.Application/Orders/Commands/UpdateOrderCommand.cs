@@ -1,8 +1,9 @@
 using AutoMapper;
-using BookVoyage.Application.Common;
-using BookVoyage.Domain.Entities.OrderAggegate;
-using BookVoyage.Persistence.Data;
 using MediatR;
+
+using BookVoyage.Application.Common;
+using BookVoyage.Application.Common.Interfaces;
+using BookVoyage.Domain.Entities.OrderAggegate;
 
 namespace BookVoyage.Application.Orders.Commands;
 

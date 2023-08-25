@@ -3,8 +3,7 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 
 using BookVoyage.Application.Common;
-using BookVoyage.Persistence.Data;
-
+using BookVoyage.Application.Common.Interfaces;
 
 namespace BookVoyage.Application.Books.Queries;
 
@@ -18,10 +17,10 @@ public record GetBookQuery : IRequest<ApiResult<BookDto>>
 
 public class GetBookQueryHandler : IRequestHandler<GetBookQuery, ApiResult<BookDto>>
 {
-    private readonly ApplicationDbContext _dbContext;
+    private readonly IApplicationDbContext _dbContext;
     private readonly IMapper _mapper;
 
-    public GetBookQueryHandler(ApplicationDbContext dbContext, IMapper mapper)
+    public GetBookQueryHandler(IApplicationDbContext dbContext, IMapper mapper)
     {
         _dbContext = dbContext;
         _mapper = mapper;

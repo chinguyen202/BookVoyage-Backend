@@ -1,9 +1,8 @@
 using AutoMapper;
-using BookVoyage.Application.Common;
-using BookVoyage.Domain.Entities;
-using BookVoyage.Persistence.Data;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
+
+using BookVoyage.Application.Common;
+using BookVoyage.Application.Common.Interfaces;
 
 namespace BookVoyage.Application.Authors.Queries;
 
@@ -15,10 +14,10 @@ public record GetAuthorQuery : IRequest<ApiResult<AuthorDto>>
 
 public class GetAuthorQueryHandler : IRequestHandler<GetAuthorQuery, ApiResult<AuthorDto>>
 {
-    private readonly ApplicationDbContext _dbContext;
+    private readonly IApplicationDbContext _dbContext;
     private readonly IMapper _mapper;
 
-    public GetAuthorQueryHandler(ApplicationDbContext dbContext, IMapper mapper)
+    public GetAuthorQueryHandler(IApplicationDbContext dbContext, IMapper mapper)
     {
         _dbContext = dbContext;
         _mapper = mapper;

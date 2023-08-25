@@ -1,15 +1,13 @@
-using System.Reflection;
-using BookVoyage.Domain.Common;
+using BookVoyage.Application.Common.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using Npgsql;
+using Microsoft.AspNetCore.Identity;
 
 using BookVoyage.Domain.Entities;
 using BookVoyage.Domain.Entities.OrderAggegate;
 using BookVoyage.Domain.Entities.UserAggegate;
 using BookVoyage.Utility.Constants;
-using Microsoft.AspNetCore.Identity;
 
 namespace BookVoyage.Persistence.Data;
 

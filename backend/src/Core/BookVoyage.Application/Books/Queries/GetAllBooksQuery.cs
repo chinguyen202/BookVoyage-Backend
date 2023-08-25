@@ -1,11 +1,9 @@
 using AutoMapper;
-using BookVoyage.Application.Authors;
-using BookVoyage.Application.Categories;
-using BookVoyage.Application.Common;
-using BookVoyage.Domain.Entities;
-using BookVoyage.Persistence.Data;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+
+using BookVoyage.Application.Common;
+using BookVoyage.Application.Common.Interfaces;
 
 namespace BookVoyage.Application.Books.Queries;
 

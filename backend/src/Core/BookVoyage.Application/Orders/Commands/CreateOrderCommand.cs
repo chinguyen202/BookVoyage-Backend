@@ -1,12 +1,11 @@
 using AutoMapper;
+using MediatR;
+using Microsoft.EntityFrameworkCore;
+
 using BookVoyage.Application.Common;
-using BookVoyage.Application.Common.Extensions;
+using BookVoyage.Application.Common.Interfaces;
 using BookVoyage.Domain.Entities.OrderAggegate;
 using BookVoyage.Domain.Entities.UserAggegate;
-using BookVoyage.Persistence.Data;
-using MediatR;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 
 namespace BookVoyage.Application.Orders.Commands;
 

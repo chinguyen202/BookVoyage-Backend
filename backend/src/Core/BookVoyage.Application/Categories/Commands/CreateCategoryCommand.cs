@@ -3,8 +3,8 @@ using MediatR;
 using AutoMapper;
 
 using BookVoyage.Application.Common;
+using BookVoyage.Application.Common.Interfaces;
 using BookVoyage.Domain.Entities;
-using BookVoyage.Persistence.Data;
 
 namespace BookVoyage.Application.Categories.Commands;
 

@@ -5,7 +5,6 @@ using Microsoft.EntityFrameworkCore;
 
 using BookVoyage.Application.Common;
 using BookVoyage.Application.Common.Interfaces;
-using BookVoyage.Persistence.Data;
 using BookVoyage.Utility.Constants;
 
 

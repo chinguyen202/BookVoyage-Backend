@@ -1,7 +1,7 @@
 using FluentValidation;
 
 using BookVoyage.Application.Authors.Commands;
-using BookVoyage.Persistence.Data;
+using BookVoyage.Application.Common.Interfaces;
 
 namespace BookVoyage.Application.Authors.Validators;
 

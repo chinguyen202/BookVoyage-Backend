@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using BookVoyage.Persistence.Data;
+using BookVoyage.Application.Common.Interfaces;
 
 namespace BookVoyage.Persistence.Extensions;
 

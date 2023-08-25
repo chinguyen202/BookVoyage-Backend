@@ -3,8 +3,8 @@ using FluentValidation;
 using MediatR;
 
 using BookVoyage.Application.Common;
+using BookVoyage.Application.Common.Interfaces;
 using BookVoyage.Domain.Entities;
-using BookVoyage.Persistence.Data;
 
 namespace BookVoyage.Application.Authors.Commands;
 
@@ -23,7 +23,7 @@ public class CreateAuthorCommandHandler : IRequestHandler<CreateAuthorCommand, A
     private readonly IMapper _mapper;
     private readonly IValidator<CreateAuthorCommand> _validator;
 
-    public CreateAuthorCommandHandler(ApplicationDbContext dbContext, IMapper mapper, IValidator<CreateAuthorCommand> validator)
+    public CreateAuthorCommandHandler(IApplicationDbContext dbContext, IMapper mapper, IValidator<CreateAuthorCommand> validator)
     {
         _dbContext = dbContext;
         _mapper = mapper;

@@ -1,10 +1,9 @@
 using BookVoyage.Domain.Entities;
 using BookVoyage.Domain.Entities.OrderAggegate;
 using BookVoyage.Domain.Entities.UserAggegate;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
-namespace BookVoyage.Persistence.Data;
+namespace BookVoyage.Application.Common.Interfaces;
 
 public interface IApplicationDbContext
 {

@@ -2,8 +2,8 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 
 using BookVoyage.Application.Common;
+using BookVoyage.Application.Common.Interfaces;
 using BookVoyage.Domain.Entities;
-using BookVoyage.Persistence.Data;
 
 namespace BookVoyage.Application.Books.Queries;
 

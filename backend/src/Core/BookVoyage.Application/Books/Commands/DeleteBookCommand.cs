@@ -2,7 +2,6 @@ using MediatR;
 
 using BookVoyage.Application.Common;
 using BookVoyage.Application.Common.Interfaces;
-using BookVoyage.Persistence.Data;
 
 namespace BookVoyage.Application.Books.Commands;
 

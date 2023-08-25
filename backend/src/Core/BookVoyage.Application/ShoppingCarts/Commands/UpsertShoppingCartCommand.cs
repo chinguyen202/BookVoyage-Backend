@@ -1,9 +1,10 @@
 using AutoMapper;
-using BookVoyage.Application.Common;
-using BookVoyage.Domain.Entities;
-using BookVoyage.Persistence.Data;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+
+using BookVoyage.Application.Common;
+using BookVoyage.Application.Common.Interfaces;
+using BookVoyage.Domain.Entities;
 
 namespace BookVoyage.Application.ShoppingCarts.Commands;
 

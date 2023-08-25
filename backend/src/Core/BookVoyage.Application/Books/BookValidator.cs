@@ -1,5 +1,6 @@
 using FluentValidation;
-using BookVoyage.Persistence.Data;
+
+using BookVoyage.Application.Common.Interfaces;
 
 namespace BookVoyage.Application.Books;
 

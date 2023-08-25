@@ -6,7 +6,6 @@ using Microsoft.EntityFrameworkCore;
 using BookVoyage.Application.Common;
 using BookVoyage.Application.Common.Interfaces;
 using BookVoyage.Domain.Entities;
-using BookVoyage.Persistence.Data;
 using BookVoyage.Utility.Constants;
 
 namespace BookVoyage.Application.Books.Commands;
@@ -46,10 +45,10 @@ public class CreateBookCommandHandler : IRequestHandler<CreateBookCommand, ApiRe
         var authors = await _dbContext.Authors
             .Where(author => request.BookUpsertDto.AuthorIds
             .Contains(author.Id))
-            .ToListAsync();
+            .ToListAsync(cancellationToken: cancellationToken);
         newBook.Authors.AddRange(authors);
         _dbContext.Books.Add(newBook);
-        var result = await _dbContext.SaveChangesAsync() > 0;
+        var result = await _dbContext.SaveChangesAsync(cancellationToken) > 0;
         if (!result) return ApiResult<Unit>.Failure("Failed to create Book");
         return ApiResult<Unit>.Success(Unit.Value);
     }

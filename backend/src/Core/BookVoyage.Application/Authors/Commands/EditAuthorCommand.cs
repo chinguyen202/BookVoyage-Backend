@@ -3,8 +3,7 @@ using FluentValidation;
 using MediatR;
 
 using BookVoyage.Application.Common;
-using BookVoyage.Persistence.Data;
-
+using BookVoyage.Application.Common.Interfaces;
 
 namespace BookVoyage.Application.Authors.Commands;
 
