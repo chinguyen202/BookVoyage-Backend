@@ -1,8 +1,8 @@
 using AutoMapper;
-using BookVoyage.Application.Common;
-using BookVoyage.Domain.Entities;
-using BookVoyage.Persistence.Data;
 using MediatR;
+
+using BookVoyage.Application.Common;
+using BookVoyage.Persistence.Data;
 
 namespace BookVoyage.Application.Categories.Queries;
 
@@ -14,10 +14,10 @@ public record GetCategoryQuery : IRequest<ApiResult<CategoryDto>>
 
 public class GetCategoryQueryHandler : IRequestHandler<GetCategoryQuery, ApiResult<CategoryDto>>
 {
-    private readonly ApplicationDbContext _dbContext;
+    private readonly IApplicationDbContext _dbContext;
     private readonly IMapper _mapper;
 
-    public GetCategoryQueryHandler(ApplicationDbContext dbContext, IMapper mapper)
+    public GetCategoryQueryHandler(IApplicationDbContext dbContext, IMapper mapper)
     {
         _dbContext = dbContext;
         _mapper = mapper;
@@ -27,6 +27,10 @@ public class GetCategoryQueryHandler : IRequestHandler<GetCategoryQuery, ApiResu
     {
        var category = await _dbContext.Categories
            .FindAsync(request.Id);
+       if (category == null)
+       {
+           return ApiResult<CategoryDto>.Failure("Can't find the category requested");
+       }
        return ApiResult<CategoryDto>.Success(_mapper.Map<CategoryDto>(category));
     }
 }

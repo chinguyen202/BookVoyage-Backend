@@ -1,10 +1,9 @@
 using AutoMapper;
-using BookVoyage.Application.Authors;
-using BookVoyage.Application.Common;
-using BookVoyage.Domain.Entities;
-using BookVoyage.Persistence.Data;
 using FluentValidation;
 using MediatR;
+
+using BookVoyage.Application.Common;
+using BookVoyage.Persistence.Data;
 
 namespace BookVoyage.Application.Categories.Commands;
 
@@ -15,11 +14,11 @@ public record EditCategoryCommand: IRequest<ApiResult<Unit>>
 
 public class EditCategoryCommandHandler : IRequestHandler<EditCategoryCommand, ApiResult<Unit>>
 {
-    private readonly ApplicationDbContext _dbContext;
+    private readonly IApplicationDbContext _dbContext;
     private readonly IMapper _mapper;
     private readonly IValidator<CategoryDto> _validator;
 
-    public EditCategoryCommandHandler(ApplicationDbContext dbContext, IMapper mapper, IValidator<CategoryDto> validator)
+    public EditCategoryCommandHandler(IApplicationDbContext dbContext, IMapper mapper, IValidator<CategoryDto> validator)
     {
         _dbContext = dbContext;
         _mapper = mapper;
@@ -36,7 +35,7 @@ public class EditCategoryCommandHandler : IRequestHandler<EditCategoryCommand, A
         }
         await _validator.ValidateAndThrowAsync(request.CategoryUpdate, cancellationToken);
         category.Name = request.CategoryUpdate.Name;
-        var result = _dbContext.SaveChangesAsync() ;
+        var result = _dbContext.SaveChangesAsync(cancellationToken) ;
         return ApiResult<Unit>.Success(Unit.Value);
     }
 }

@@ -5,8 +5,8 @@ namespace BookVoyage.Application.Categories;
 
 public class CategoryValidator: AbstractValidator<CategoryDto>
 {
-    private readonly ApplicationDbContext _dbContext;
-    public CategoryValidator(ApplicationDbContext dbContext)
+    private readonly IApplicationDbContext _dbContext;
+    public CategoryValidator(IApplicationDbContext dbContext)
     {
         _dbContext = dbContext;
         RuleFor(x => x.Name)

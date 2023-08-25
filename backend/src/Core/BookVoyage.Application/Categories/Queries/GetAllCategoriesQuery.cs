@@ -1,9 +1,9 @@
 using AutoMapper;
-using BookVoyage.Application.Common;
-using BookVoyage.Domain.Entities;
-using BookVoyage.Persistence.Data;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+
+using BookVoyage.Application.Common;
+using BookVoyage.Persistence.Data;
 
 namespace BookVoyage.Application.Categories.Queries;
 
@@ -13,10 +13,10 @@ namespace BookVoyage.Application.Categories.Queries;
 
     public class GetAllCategoriesQueryHandler : IRequestHandler<GetAllCategoriesQuery, ApiResult<List<CategoryDto>>>
     {
-        private readonly ApplicationDbContext _dbContext;
+        private readonly IApplicationDbContext _dbContext;
         private readonly IMapper _mapper;
 
-        public GetAllCategoriesQueryHandler(ApplicationDbContext dbContext, IMapper mapper)
+        public GetAllCategoriesQueryHandler(IApplicationDbContext dbContext, IMapper mapper)
         {
             _dbContext = dbContext;
             _mapper = mapper;
