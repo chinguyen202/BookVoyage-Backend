@@ -30,7 +30,8 @@ public class ApplicationDbContext:  IdentityDbContext<ApplicationUser>,IApplicat
     public DbSet<ShoppingCart> ShoppingCarts { get; set; }
     public DbSet<CartItem> CartItems { get; set; }
     public DbSet<Order> Orders { get; set; }
-    
+    public DbSet<ApplicationUser> ApplicationUsers { get; set; }
+
     static ApplicationDbContext()
     {
         AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);

@@ -20,10 +20,10 @@ public record UpsertShoppingCartCommand : IRequest<ApiResult<Unit>>
 /// </summary>
 public class UpsertShoppingCartCommandHandler : IRequestHandler<UpsertShoppingCartCommand, ApiResult<Unit>>
 {
-    private readonly ApplicationDbContext _dbContext;
+    private readonly IApplicationDbContext _dbContext;
     private readonly IMapper _mapper;
 
-    public UpsertShoppingCartCommandHandler(ApplicationDbContext dbContext, IMapper mapper)
+    public UpsertShoppingCartCommandHandler(IApplicationDbContext dbContext, IMapper mapper)
     {
         _dbContext = dbContext;
         _mapper = mapper;
@@ -49,7 +49,7 @@ public class UpsertShoppingCartCommandHandler : IRequestHandler<UpsertShoppingCa
                 CartItems = null
             };
             _dbContext.ShoppingCarts.Add(newCart);
-            var result = await _dbContext.SaveChangesAsync() > 0;
+            var result = await _dbContext.SaveChangesAsync(cancellationToken) > 0;
             if (!result) return ApiResult<Unit>.Failure("Fail to add shopping cart");
             // Create a new cart item
             CartItem newCartItem = new()
@@ -58,7 +58,7 @@ public class UpsertShoppingCartCommandHandler : IRequestHandler<UpsertShoppingCa
                 Quantity = request.UpsertShoppingCartDto.Quantity,
             };
             _dbContext.CartItems.Add(newCartItem);
-            var resultCartItem = await _dbContext.SaveChangesAsync() > 0;
+            var resultCartItem = await _dbContext.SaveChangesAsync(cancellationToken) > 0;
             if (!resultCartItem) return ApiResult<Unit>.Failure("Fail to add cart item");
         }
         else
@@ -75,8 +75,8 @@ public class UpsertShoppingCartCommandHandler : IRequestHandler<UpsertShoppingCa
                     ShoppingCartId = shoppingCart.Id,
                     BookId = request.UpsertShoppingCartDto.BookId
                 };
-                _dbContext.Add(cartItem);
-                var result = await _dbContext.SaveChangesAsync();
+                _dbContext.CartItems.Add(cartItem);
+                var result = await _dbContext.SaveChangesAsync(cancellationToken);
             }
             else
             {
@@ -99,7 +99,6 @@ public class UpsertShoppingCartCommandHandler : IRequestHandler<UpsertShoppingCa
                     cartItemInCart.Quantity = newQuantity;
                     await _dbContext.SaveChangesAsync(cancellationToken);
                 }
-                
             }
         }
         return ApiResult<Unit>.Success(Unit.Value);

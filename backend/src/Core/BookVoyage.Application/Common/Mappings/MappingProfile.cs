@@ -1,9 +1,11 @@
 using AutoMapper;
+
 using BookVoyage.Application.Authors;
 using BookVoyage.Application.Books;
 using BookVoyage.Application.Categories;
 using BookVoyage.Application.Orders.Commands;
 using BookVoyage.Application.Orders.Queries;
+using BookVoyage.Application.ShoppingCarts.Queries;
 using BookVoyage.Domain.Entities;
 using BookVoyage.Domain.Entities.OrderAggegate;
 
@@ -28,24 +30,22 @@ public class MappingProfile: Profile
                 , opt => opt.MapFrom(src => src.Authors.Select(author => new AuthorEditDto
             {
                 Id = author.Id,
-                
                 FullName = author.FullName,
                 Publisher = author.Publisher
             }).ToList()));
         CreateMap<BookDto, Book>();
         CreateMap<BookUpsertDto, Book>();
         CreateMap<Book, BookUpsertDto>();
+        CreateMap<ShoppingCart, ShoppingCartResponseDto>();
+        CreateMap<ShoppingCartResponseDto, ShoppingCart>();
         CreateMap<Order, OrderDto>()
-            .ForMember(dest => dest.OrderStatus, opt => opt.MapFrom(src => src.OrderStatus.ToString())); // Mapping enum to string
-
+            .ForMember(dest => dest.OrderStatus, opt => opt.MapFrom(src => src.OrderStatus.ToString())); 
         CreateMap<OrderDto, Order>()
-            .ForMember(dest => dest.OrderStatus, opt => opt.MapFrom(src => Enum.Parse(typeof(OrderStatus), src.OrderStatus))); // Mapping string to enum
-
+            .ForMember(dest => dest.OrderStatus, opt => opt.MapFrom(src => Enum.Parse(typeof(OrderStatus), src.OrderStatus))); 
         CreateMap<OrderItem, OrderItemDto>()
             .ForMember(dest => dest.BookId, opt => opt.MapFrom(src => src.BookOrderedItem.BookId))
             .ForMember(dest => dest.BookName, opt => opt.MapFrom(src => src.BookOrderedItem.BookName))
             .ForMember(dest => dest.BookImageUrl, opt => opt.MapFrom(src => src.BookOrderedItem.ImageUrl));
-
         CreateMap<OrderItemDto, OrderItem>()
             .ForMember(dest => dest.Price, opt => opt.MapFrom(src => src.Price))
             .ForMember(dest => dest.Quantity, opt => opt.MapFrom(src => src.Quantity))
@@ -55,10 +55,8 @@ public class MappingProfile: Profile
                 BookName = src.BookName,
                 ImageUrl = src.BookImageUrl
             }));
-
         CreateMap<OrderUpdatedDto, Order>()
             .ForMember(dest => dest.OrderStatus, opt => opt.MapFrom(src => Enum.Parse(typeof(OrderStatus), src.OrderStatus)));
-
         CreateMap<Order, OrderUpdatedDto>()
             .ForMember(dest => dest.OrderStatus, opt => opt.MapFrom(src => src.OrderStatus.ToString()));
 

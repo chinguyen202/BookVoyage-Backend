@@ -14,6 +14,6 @@ public interface IApplicationDbContext
     public DbSet<ShoppingCart> ShoppingCarts { get; set; }
     public DbSet<CartItem> CartItems { get; set; }
     public DbSet<Order> Orders { get; set; }
-
+    public DbSet<ApplicationUser> ApplicationUsers { get; set; }
     Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
 }

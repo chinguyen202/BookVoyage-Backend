@@ -13,10 +13,10 @@ public record UpdateOrderCommand: IRequest<ApiResult<Unit>>
 
 public class UpdateOrderCommandHandler : IRequestHandler<UpdateOrderCommand, ApiResult<Unit>>
 {
-    private readonly ApplicationDbContext _context;
+    private readonly IApplicationDbContext _context;
     private readonly IMapper _mapper;
 
-    public UpdateOrderCommandHandler(ApplicationDbContext context, IMapper mapper)
+    public UpdateOrderCommandHandler(IApplicationDbContext context, IMapper mapper)
     {
         _context = context;
         _mapper = mapper;
@@ -33,7 +33,7 @@ public class UpdateOrderCommandHandler : IRequestHandler<UpdateOrderCommand, Api
 
         var orderUpdate = _mapper.Map<Order>(request.OrderUpdatedDto);
         orderInDb.OrderStatus = orderUpdate.OrderStatus;
-        var result = await _context.SaveChangesAsync() > 0;
+        var result = await _context.SaveChangesAsync(cancellationToken) > 0;
         if (!result)
         {
             return ApiResult<Unit>.Failure("Error in update the order");

@@ -13,7 +13,7 @@ namespace BookVoyage.Application.Orders.Queries;
 /// </summary>
 public record GetOrdersQuery: IRequest<ApiResult<List<OrderDto>>>
 {
-    public string? UserId { get; set; }
+    public string? UserId { get; init; }
 }
 
 public class GetOrdersQueryHandler : IRequestHandler<GetOrdersQuery,ApiResult<List<OrderDto>>>
@@ -39,7 +39,7 @@ public class GetOrdersQueryHandler : IRequestHandler<GetOrdersQuery,ApiResult<Li
         }
         var orders = await ordersInDb
             .Where(u => u.BuyerId == request.UserId)
-            .ToListAsync();
+            .ToListAsync(cancellationToken: cancellationToken);
 
         var orderDtos = _mapper.Map<List<OrderDto>>(orders);
 

@@ -18,10 +18,10 @@ public record CreateOrderCommand : IRequest<ApiResult<Unit>>
 
 public class CreateOrderCommandHandler : IRequestHandler<CreateOrderCommand, ApiResult<Unit>>
 {
-    private readonly ApplicationDbContext _dbContext;
+    private readonly IApplicationDbContext _dbContext;
     private readonly IMapper _mapper;
 
-    public CreateOrderCommandHandler(ApplicationDbContext dbContext, IMapper mapper)
+    public CreateOrderCommandHandler(IApplicationDbContext dbContext, IMapper mapper)
     {
         _dbContext = dbContext;
         _mapper = mapper;
@@ -33,7 +33,7 @@ public class CreateOrderCommandHandler : IRequestHandler<CreateOrderCommand, Api
         var shoppingCart = await _dbContext.ShoppingCarts
             .Include(u => u.CartItems)
             .ThenInclude(u => u.Book)
-            .FirstOrDefaultAsync(u => u.BuyerId == request.UserId);
+            .FirstOrDefaultAsync(u => u.BuyerId == request.UserId, cancellationToken: cancellationToken);
         if (shoppingCart == null)
         {
             return ApiResult<Unit>.Failure("User doesn't have any shopping cart");
@@ -79,7 +79,7 @@ public class CreateOrderCommandHandler : IRequestHandler<CreateOrderCommand, Api
 
         if (request.CreateOrderDto.SaveAddress)
         {
-            var user = await _dbContext.Users.FirstOrDefaultAsync(x => x.UserName == request.UserId);
+            var user = await _dbContext.ApplicationUsers.FirstOrDefaultAsync(x => x.UserName == request.UserId, cancellationToken: cancellationToken);
             if (user != null)
             {
                 user.Address = new UserAddress
@@ -90,11 +90,11 @@ public class CreateOrderCommandHandler : IRequestHandler<CreateOrderCommand, Api
                     State = request.CreateOrderDto.ShippingAddress.State,
                     Country = request.CreateOrderDto.ShippingAddress.Country
                 };
-                _dbContext.Update(user);
+                _dbContext.ApplicationUsers.Update(user);
             }
         }
 
-        var result = await _dbContext.SaveChangesAsync() > 0;
+        var result = await _dbContext.SaveChangesAsync(cancellationToken) > 0;
         if (!result)
         {
             return ApiResult<Unit>.Failure("Error when trying to create an order");

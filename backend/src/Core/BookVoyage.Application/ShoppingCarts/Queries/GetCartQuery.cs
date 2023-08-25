@@ -1,3 +1,4 @@
+using AutoMapper;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -7,35 +8,38 @@ using BookVoyage.Persistence.Data;
 
 namespace BookVoyage.Application.ShoppingCarts.Queries;
 
-public record GetCartQuery: IRequest<ApiResult<ShoppingCart>>
+public record GetCartQuery: IRequest<ApiResult<ShoppingCartResponseDto>>
 {
     public string Id { get; set; }
 }
 
-public class GetCartQueryHandler : IRequestHandler<GetCartQuery, ApiResult<ShoppingCart>>
+public class GetCartQueryHandler : IRequestHandler<GetCartQuery, ApiResult<ShoppingCartResponseDto>>
 {
-    private readonly ApplicationDbContext _dbContext;
+    private readonly IApplicationDbContext _dbContext;
+    private readonly IMapper _mapper;
 
-    public GetCartQueryHandler(ApplicationDbContext dbContext)
+    public GetCartQueryHandler(IApplicationDbContext dbContext, IMapper mapper)
     {
         _dbContext = dbContext;
+        _mapper = mapper;
     }
 
-    public async Task<ApiResult<ShoppingCart>> Handle(GetCartQuery request, CancellationToken cancellationToken)
+    public async Task<ApiResult<ShoppingCartResponseDto>> Handle(GetCartQuery request, CancellationToken cancellationToken)
     {
         if (string.IsNullOrEmpty(request.Id))
         {
-            return ApiResult<ShoppingCart>.Failure("Can't found user");
+            return ApiResult<ShoppingCartResponseDto>.Failure("Can't found user");
         }
         var shoppingCart = await _dbContext.ShoppingCarts
             .Include(u => u.CartItems)
             .ThenInclude(u => u.Book)
-            .FirstOrDefaultAsync(u => u.BuyerId == request.Id);
-        if (shoppingCart == null)
+            .FirstOrDefaultAsync(u => u.BuyerId == request.Id, cancellationToken: cancellationToken);
+        if (shoppingCart != null)
         {
-            return ApiResult<ShoppingCart>.Failure("The user doesn't have an existing shopping cart");
+            var response = _mapper.Map<ShoppingCartResponseDto>(shoppingCart);
+            return ApiResult<ShoppingCartResponseDto>.Success(response);
         }
-        return ApiResult<ShoppingCart>.Success(shoppingCart);
+        return ApiResult<ShoppingCartResponseDto>.Failure("The user doesn't have an existing shopping cart");
     }
     
 }

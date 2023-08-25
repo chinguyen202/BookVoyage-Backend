@@ -13,15 +13,15 @@ namespace BookVoyage.Application.Orders.Queries;
 /// </summary>
 public record GetOrderByIdQuery: IRequest<ApiResult<OrderDto>>
 {
-    public Guid OrderId { get; set; }
+    public Guid OrderId { get; init; }
 }
 
 public class GetOrderByIdQueryHandler : IRequestHandler<GetOrderByIdQuery, ApiResult<OrderDto>>
 {
-    private readonly ApplicationDbContext _dbContext;
+    private readonly IApplicationDbContext _dbContext;
     private readonly IMapper _mapper;
 
-    public GetOrderByIdQueryHandler(ApplicationDbContext dbContext, IMapper mapper)
+    public GetOrderByIdQueryHandler(IApplicationDbContext dbContext, IMapper mapper)
     {
         _dbContext = dbContext;
         _mapper = mapper;
@@ -36,7 +36,7 @@ public class GetOrderByIdQueryHandler : IRequestHandler<GetOrderByIdQuery, ApiRe
         var orderInDb = await _dbContext.Orders
             .Include(x => x.OrderItems)
             .Where(u => u.Id == request.OrderId)
-            .FirstOrDefaultAsync();
+            .FirstOrDefaultAsync(cancellationToken: cancellationToken);
 
         if (orderInDb == null)
         {
