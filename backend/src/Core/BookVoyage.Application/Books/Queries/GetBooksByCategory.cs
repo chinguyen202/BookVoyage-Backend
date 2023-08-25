@@ -1,8 +1,9 @@
+using MediatR;
+using Microsoft.EntityFrameworkCore;
+
 using BookVoyage.Application.Common;
 using BookVoyage.Domain.Entities;
 using BookVoyage.Persistence.Data;
-using MediatR;
-using Microsoft.EntityFrameworkCore;
 
 namespace BookVoyage.Application.Books.Queries;
 
@@ -14,9 +15,9 @@ public record GetBooksByCategoryQuery : IRequest<ApiResult<List<Book>>>
 
 public class GetBooksByCategoryHandler : IRequestHandler<GetBooksByCategoryQuery, ApiResult<List<Book>>>
 {
-    private readonly ApplicationDbContext _dbContext;
+    private readonly IApplicationDbContext _dbContext;
 
-    public GetBooksByCategoryHandler(ApplicationDbContext dbContext)
+    public GetBooksByCategoryHandler(IApplicationDbContext dbContext)
     {
         _dbContext = dbContext;
     }

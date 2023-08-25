@@ -1,9 +1,10 @@
 using AutoMapper;
-using BookVoyage.Application.Common;
-using BookVoyage.Domain.Entities;
-using BookVoyage.Persistence.Data;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+
+using BookVoyage.Application.Common;
+using BookVoyage.Persistence.Data;
+
 
 namespace BookVoyage.Application.Books.Queries;
 
@@ -31,7 +32,7 @@ public class GetBookQueryHandler : IRequestHandler<GetBookQuery, ApiResult<BookD
        var book = await _dbContext.Books
            .Include(a => a.Category)
            .Include(a => a.Authors)
-           .FirstOrDefaultAsync(u => u.Id == request.Id);
+           .FirstOrDefaultAsync(u => u.Id == request.Id, cancellationToken: cancellationToken);
        if (book == null)
        {
            return ApiResult<BookDto>.Failure("Book can not be found.");

@@ -18,12 +18,12 @@ public record CreateBookCommand : IRequest<ApiResult<Unit>>
 
 public class CreateBookCommandHandler : IRequestHandler<CreateBookCommand, ApiResult<Unit>>
 {
-    private readonly ApplicationDbContext _dbContext;
+    private readonly IApplicationDbContext _dbContext;
     private readonly IMapper _mapper;
     private readonly IValidator<BookUpsertDto> _validator;
     private readonly IBlobService _blobService;
 
-    public CreateBookCommandHandler(ApplicationDbContext dbContext, IMapper mapper, IValidator<BookUpsertDto> validator, IBlobService blobService)
+    public CreateBookCommandHandler(IApplicationDbContext dbContext, IMapper mapper, IValidator<BookUpsertDto> validator, IBlobService blobService)
     {
         _dbContext = dbContext;
         _mapper = mapper;

@@ -1,9 +1,8 @@
-using BookVoyage.Application.Authors.Commands;
+using MediatR;
+
 using BookVoyage.Application.Common;
 using BookVoyage.Application.Common.Interfaces;
 using BookVoyage.Persistence.Data;
-using BookVoyage.Utility.Constants;
-using MediatR;
 
 namespace BookVoyage.Application.Books.Commands;
 
@@ -14,10 +13,10 @@ public record DeleteBookCommand: IRequest<ApiResult<Unit>>
 
 public class DeleteBookCommandHandler : IRequestHandler<DeleteBookCommand, ApiResult<Unit>>
 {
-    private readonly ApplicationDbContext _dbContext;
+    private readonly IApplicationDbContext _dbContext;
     private readonly IBlobService _blobService;
 
-    public DeleteBookCommandHandler(ApplicationDbContext dbContext, IBlobService blobService)
+    public DeleteBookCommandHandler(IApplicationDbContext dbContext, IBlobService blobService)
     {
         _dbContext = dbContext;
         _blobService = blobService;
@@ -29,8 +28,8 @@ public class DeleteBookCommandHandler : IRequestHandler<DeleteBookCommand, ApiRe
         {
             return ApiResult<Unit>.Failure("Can not find book.");
         }
-        _dbContext.Remove(bookFromDb);
-        var result = await _dbContext.SaveChangesAsync() > 0;
+        _dbContext.Books.Remove(bookFromDb);
+        var result = await _dbContext.SaveChangesAsync(cancellationToken) > 0;
         if (!result) return ApiResult<Unit>.Failure("Fail to delete the book");
         return ApiResult<Unit>.Success(Unit.Value);
     }

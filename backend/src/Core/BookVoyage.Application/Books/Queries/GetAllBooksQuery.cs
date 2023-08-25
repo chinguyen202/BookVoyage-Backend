@@ -15,10 +15,10 @@ namespace BookVoyage.Application.Books.Queries;
 
     public class GetAllBooksQueryHandler : IRequestHandler<GetAllBooksQuery, ApiResult<List<BookDto>>>
     {
-        private readonly ApplicationDbContext _dbContext;
+        private readonly IApplicationDbContext _dbContext;
         private readonly IMapper _mapper;
 
-        public GetAllBooksQueryHandler(ApplicationDbContext dbContext, IMapper mapper)
+        public GetAllBooksQueryHandler(IApplicationDbContext dbContext, IMapper mapper)
         {
             _dbContext = dbContext;
             _mapper = mapper;
@@ -29,7 +29,7 @@ namespace BookVoyage.Application.Books.Queries;
             var books = await _dbContext.Books
                 .Include(a => a.Category)
                 .Include(a => a.Authors)
-                .ToListAsync();
+                .ToListAsync(cancellationToken: cancellationToken);
 
             var bookDtos = _mapper.Map<List<BookDto>>(books);
             return ApiResult<List<BookDto>>.Success(bookDtos);

@@ -5,9 +5,9 @@ namespace BookVoyage.Application.Books;
 
 public class BookValidator: AbstractValidator<BookUpsertDto>
 {
-    private readonly ApplicationDbContext _dbContext;
+    private readonly IApplicationDbContext _dbContext;
 
-    public BookValidator(ApplicationDbContext dbContext)
+    public BookValidator(IApplicationDbContext dbContext)
     {
         _dbContext = dbContext;
         RuleFor(x => x.Title).NotEmpty().MinimumLength(2).MaximumLength(100);

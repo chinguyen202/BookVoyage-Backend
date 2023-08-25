@@ -1,8 +1,9 @@
+using MediatR;
+using Microsoft.EntityFrameworkCore;
+
 using BookVoyage.Application.Common;
 using BookVoyage.Domain.Entities;
 using BookVoyage.Persistence.Data;
-using MediatR;
-using Microsoft.EntityFrameworkCore;
 
 namespace BookVoyage.Application.Books.Queries;
 
@@ -14,9 +15,9 @@ public record GetBooksByAuthorQuery : IRequest<ApiResult<List<Book>>>
 
 public class GetBooksByAuthorHandler : IRequestHandler<GetBooksByAuthorQuery, ApiResult<List<Book>>>
 {
-    private readonly ApplicationDbContext _dbContext;
+    private readonly IApplicationDbContext _dbContext;
 
-    public GetBooksByAuthorHandler(ApplicationDbContext dbContext)
+    public GetBooksByAuthorHandler(IApplicationDbContext dbContext)
     {
         _dbContext = dbContext;
     }
@@ -28,7 +29,7 @@ public class GetBooksByAuthorHandler : IRequestHandler<GetBooksByAuthorQuery, Ap
             .Where(b => b.Authors.Any(a => a.Id == request.Id))
             .Include(b => b.Category)
             .Include(b => b.Authors)
-            .ToListAsync();
+            .ToListAsync(cancellationToken: cancellationToken);
         return ApiResult<List<Book>>.Success(books);
     }
 }

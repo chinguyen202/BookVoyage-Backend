@@ -1,13 +1,13 @@
 using AutoMapper;
 using MediatR;
+using FluentValidation;
+using Microsoft.EntityFrameworkCore;
 
 using BookVoyage.Application.Common;
 using BookVoyage.Application.Common.Interfaces;
-using BookVoyage.Domain.Entities;
 using BookVoyage.Persistence.Data;
 using BookVoyage.Utility.Constants;
-using FluentValidation;
-using Microsoft.EntityFrameworkCore;
+
 
 namespace BookVoyage.Application.Books.Commands;
 
@@ -18,12 +18,12 @@ public record EditBookCommand: IRequest<ApiResult<Unit>>
 
 public class EditBookCommandHandler : IRequestHandler<EditBookCommand, ApiResult<Unit>>
 {
-    private readonly ApplicationDbContext _dbContext;
+    private readonly IApplicationDbContext _dbContext;
     private readonly IMapper _mapper;
     private readonly IValidator<BookUpsertDto> _validator;
     private readonly IBlobService _blobService;
 
-    public EditBookCommandHandler(ApplicationDbContext dbContext, IMapper mapper, IValidator<BookUpsertDto> validator, IBlobService blobService)
+    public EditBookCommandHandler(IApplicationDbContext dbContext, IMapper mapper, IValidator<BookUpsertDto> validator, IBlobService blobService)
     {
         _dbContext = dbContext;
         _mapper = mapper;
@@ -38,7 +38,7 @@ public class EditBookCommandHandler : IRequestHandler<EditBookCommand, ApiResult
         // Get the update book from database
         var bookFromDb = await _dbContext.Books
                 .Include(b => b.Authors)
-                .SingleOrDefaultAsync(b => b.Id == request.BookEditDto.Id);
+                .SingleOrDefaultAsync(b => b.Id == request.BookEditDto.Id, cancellationToken: cancellationToken);
 
         if (bookFromDb == null)
         {
@@ -62,7 +62,7 @@ public class EditBookCommandHandler : IRequestHandler<EditBookCommand, ApiResult
         {
             var authors = await _dbContext.Authors
                 .Where(a => request.BookEditDto.AuthorIds.Contains(a.Id))
-                .ToListAsync();
+                .ToListAsync(cancellationToken: cancellationToken);
             bookFromDb.Authors.Clear();
             bookFromDb.Authors.AddRange(authors);
         }
