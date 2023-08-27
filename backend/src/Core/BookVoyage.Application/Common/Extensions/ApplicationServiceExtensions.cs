@@ -15,7 +15,7 @@ public static class ApplicationServiceExtensions
         services.AddMediatR(AssemblyReference.ApplicationAssembly);
         services.AddAutoMapper(typeof(MappingProfile).Assembly);
         services.AddValidatorsFromAssembly(AssemblyReference.ApplicationAssembly);
-        services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidatorBehavior<,>));
+        services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehaviour<,>));
         return services;
     }
 }

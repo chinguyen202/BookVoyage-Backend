@@ -13,7 +13,7 @@ namespace BookVoyage.Application.Authors.Commands;
 /// </summary>
 public record CreateAuthorCommand : IRequest<ApiResult<Unit>>
 {
-    public AuthorDto AuthorDto { get; set; }
+    public AuthorDto AuthorDto { get; init; }
     
 }
 
@@ -21,17 +21,17 @@ public class CreateAuthorCommandHandler : IRequestHandler<CreateAuthorCommand, A
 {
     private readonly IApplicationDbContext _dbContext;
     private readonly IMapper _mapper;
-    private readonly IValidator<CreateAuthorCommand> _validator;
+    // private readonly IValidator<CreateAuthorCommand> _validator;
 
     public CreateAuthorCommandHandler(IApplicationDbContext dbContext, IMapper mapper, IValidator<CreateAuthorCommand> validator)
     {
         _dbContext = dbContext;
         _mapper = mapper;
-        _validator = validator;
+        // _validator = validator;
     }
     public async Task<ApiResult<Unit>> Handle(CreateAuthorCommand request, CancellationToken cancellationToken)
     {
-        await _validator.ValidateAndThrowAsync(request, cancellationToken);
+        // await _validator.ValidateAndThrowAsync(request, cancellationToken);
         // Map the AuthorDto to an Author entity
         var authorEntity = _mapper.Map<Author>(request.AuthorDto);
         authorEntity.Books = null;

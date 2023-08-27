@@ -11,15 +11,19 @@ public class Seed
     {
         if (!userManager.Users.Any())
         {
-            var users = new List<ApplicationUser>
+            if (!userManager.Users.Any())
             {
-                new ApplicationUser { FirstName = "Bon", LastName = "Smith", UserName = "bob", Email = "bob@test.com" },
-                new ApplicationUser { FirstName = "Tom", LastName = "Smith", UserName = "tom", Email = "tom@test.com" },
-                new ApplicationUser { FirstName = "Ree", LastName = "Smith", UserName = "tep", Email = "tep@test.com" },
-            };
-            foreach (var user in users)
-            {
-                await userManager.CreateAsync(user, "Pa$$w0rd");
+                var adminUser = new ApplicationUser
+                {
+                    FirstName = "Admin",
+                    LastName = "User",
+                    UserName = "admin",
+                    Email = "admin@test.com",
+                };
+                await userManager.CreateAsync(adminUser, "Admin123!"); // You can set a strong password here
+                
+                // Assign the admin role to the admin user
+                await userManager.AddToRoleAsync(adminUser, SD.Admin);
             }
         }
         

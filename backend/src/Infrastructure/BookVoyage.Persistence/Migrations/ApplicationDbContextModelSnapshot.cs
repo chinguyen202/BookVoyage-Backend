@@ -460,13 +460,13 @@ namespace BookVoyage.Persistence.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "e35e4004-75b5-4c40-aa07-eb1cbececac4",
+                            Id = "ea18881d-bb80-4540-ba43-aedf78d8475f",
                             Name = "admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "b0b54704-0fff-47f7-ab2f-c9bf9639a03f",
+                            Id = "2633c34d-1c6f-4be5-90e7-8cfb640f13a9",
                             Name = "customer",
                             NormalizedName = "CUSTOMER"
                         });
@@ -667,7 +667,7 @@ namespace BookVoyage.Persistence.Migrations
 
             modelBuilder.Entity("BookVoyage.Domain.Entities.OrderAggegate.Order", b =>
                 {
-                    b.OwnsOne("BookVoyage.Domain.Entities.OrderAggegate.ShippingAddress", "ShippingAddress", b1 =>
+                    b.OwnsOne("BookVoyage.Domain.Entities.OrderAggegate.Order.ShippingAddress#BookVoyage.Domain.Entities.OrderAggegate.ShippingAddress", "ShippingAddress", b1 =>
                         {
                             b1.Property<Guid>("OrderId")
                                 .HasColumnType("uuid")
@@ -700,7 +700,7 @@ namespace BookVoyage.Persistence.Migrations
 
                             b1.HasKey("OrderId");
 
-                            b1.ToTable("orders");
+                            b1.ToTable("orders", (string)null);
 
                             b1.WithOwner()
                                 .HasForeignKey("OrderId")
@@ -718,7 +718,7 @@ namespace BookVoyage.Persistence.Migrations
                         .HasForeignKey("OrderId")
                         .HasConstraintName("fk_order_item_orders_order_id");
 
-                    b.OwnsOne("BookVoyage.Domain.Entities.OrderAggegate.BookOrderedItem", "BookOrderedItem", b1 =>
+                    b.OwnsOne("BookVoyage.Domain.Entities.OrderAggegate.OrderItem.BookOrderedItem#BookVoyage.Domain.Entities.OrderAggegate.BookOrderedItem", "BookOrderedItem", b1 =>
                         {
                             b1.Property<Guid>("OrderItemId")
                                 .HasColumnType("uuid")
@@ -740,7 +740,7 @@ namespace BookVoyage.Persistence.Migrations
 
                             b1.HasKey("OrderItemId");
 
-                            b1.ToTable("order_item");
+                            b1.ToTable("order_item", (string)null);
 
                             b1.WithOwner()
                                 .HasForeignKey("OrderItemId")
