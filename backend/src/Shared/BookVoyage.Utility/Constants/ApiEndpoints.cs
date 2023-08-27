@@ -50,6 +50,7 @@ public static class ApiEndpoints
             private const string Base = $"{VersionBase}/users";
             public const string Create = $"{Base}/register";
             public const string Get = Base;
+            public const string GetAddress = $"{Base}/address";
             public const string GetAll = Base;
             public const string Update = $"{Base}/{{id:guid}}";
             public const string Delete = $"{Base}/{{id:guid}}";

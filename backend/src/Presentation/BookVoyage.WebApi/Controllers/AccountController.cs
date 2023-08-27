@@ -86,6 +86,23 @@ public class AccountController: ControllerBase
         return ApiResult<LoginResponseDto>.Failure(result.Errors.ToString());
     }
     
+    // Get user saved address
+    [HttpGet(ApiEndpoints.V1.Users.GetAddress)]
+    public async Task<ActionResult<ApiResult<UserAddress>>> GetAddress()
+    {
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (userId == null)
+        {
+            return ApiResult<UserAddress>.Failure("Can't find user");
+        }
+
+        var address = await _userManager.Users
+            .Where(u => u.Id == userId)
+            .Select(user => user.Address)
+            .FirstOrDefaultAsync();
+        return ApiResult<UserAddress>.Success(address);
+    }
+    
     // Creates a response object for user authentication 
     private async Task<LoginResponseDto> CreateUserObject(ApplicationUser user)
     {
