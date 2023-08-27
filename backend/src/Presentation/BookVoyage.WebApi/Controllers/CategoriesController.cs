@@ -28,7 +28,7 @@ public class CategoriesController: BaseApiController
         return HandleResult(await Mediator.Send(new GetCategoryQuery { Id = id }));
     }
     //  Create a category 
-    [AllowAnonymous] // for development only
+    [Authorize(Roles = SD.Admin)]
     [HttpPost(ApiEndpoints.V1.Categories.Create)]
     public async Task<IActionResult> CreateCategory(CategoryDto categoryDto)
     {
@@ -36,7 +36,7 @@ public class CategoriesController: BaseApiController
     }
     
     // Update a category
-    [AllowAnonymous] // For development only
+    [Authorize(Roles = SD.Admin)]
     [HttpPut(ApiEndpoints.V1.Categories.Update)]
     public async Task<IActionResult> EditCategory(Guid id, CategoryDto categoryDto)
     {
@@ -45,7 +45,7 @@ public class CategoriesController: BaseApiController
     }
     
     // Delete a category
-    [AllowAnonymous] // For development only
+    [Authorize(Roles = SD.Admin)]
     [HttpDelete(ApiEndpoints.V1.Categories.Delete)]
     public async Task<IActionResult> DeleteCategory(Guid id)
     {

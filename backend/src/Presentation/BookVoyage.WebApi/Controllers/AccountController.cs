@@ -1,5 +1,4 @@
 using System.Security.Claims;
-using BookVoyage.Application.Common;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -9,6 +8,7 @@ using BookVoyage.Domain.Entities.UserAggegate;
 using BookVoyage.Utility.Constants;
 using BookVoyage.WebApi.DTOs;
 using BookVoyage.WebApi.Services;
+using BookVoyage.Application.Common;
 
 namespace BookVoyage.WebApi.Controllers;
 /// <summary>

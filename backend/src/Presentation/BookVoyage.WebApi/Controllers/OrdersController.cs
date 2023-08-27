@@ -22,7 +22,6 @@ public class OrdersController: BaseApiController
     }
 
     // Get an order by id
-    [AllowAnonymous]
     [HttpGet(ApiEndpoints.V1.Orders.GetByOrderId)]
     public async Task<IActionResult> GetOrder(Guid id)
     {

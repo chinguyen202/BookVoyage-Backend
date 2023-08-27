@@ -29,7 +29,7 @@ public class AuthorsController: BaseApiController
         return HandleResult(await Mediator.Send(new GetAuthorQuery { Id = id }));
     }
     //  Create a Author
-    [AllowAnonymous]
+    [Authorize(Roles = SD.Admin)]
     [HttpPost(ApiEndpoints.V1.Authors.Create)]
     public async Task<IActionResult> CreateAuthor(AuthorDto authorDto)
     {

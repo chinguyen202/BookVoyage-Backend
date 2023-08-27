@@ -28,7 +28,7 @@ public class BooksController: BaseApiController
         return HandleResult(await Mediator.Send(new GetBookQuery { Id = id }));
     }
     //  Create a Book
-    [AllowAnonymous]
+    [Authorize(Roles = SD.Admin)]
     [HttpPost(ApiEndpoints.V1.Books.Create)]
     public async Task<IActionResult> CreateBook([FromForm]BookUpsertDto bookDto)
     {
@@ -36,7 +36,7 @@ public class BooksController: BaseApiController
     }
     
     // Update a Book
-    [AllowAnonymous]
+    [Authorize(Roles = SD.Admin)]
     [HttpPut(ApiEndpoints.V1.Books.Update)]
     public async Task<IActionResult> EditBook(Guid id, [FromForm]BookUpsertDto bookEditDto)
     {
@@ -45,7 +45,7 @@ public class BooksController: BaseApiController
     }
     
     // Delete a Book
-    [AllowAnonymous]
+    [Authorize(Roles = SD.Admin)]
     [HttpDelete(ApiEndpoints.V1.Books.Delete)]
     public async Task<IActionResult> DeleteBook(Guid id)
     {
