@@ -7,7 +7,7 @@ namespace BookVoyage.Application.Authors.Validators;
 
 public class EditAuthorCommandValidator : AbstractValidator<EditAuthorCommand>
 {
-    private IApplicationDbContext _dbContext;
+    private readonly IApplicationDbContext _dbContext;
 
     public EditAuthorCommandValidator(IApplicationDbContext dbContext)
     {

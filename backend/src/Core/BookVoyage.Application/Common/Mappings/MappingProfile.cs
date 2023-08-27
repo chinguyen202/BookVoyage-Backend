@@ -19,6 +19,8 @@ public class MappingProfile: Profile
         CreateMap<CategoryDto, Category>();
         CreateMap<Author, AuthorDto>();
         CreateMap<AuthorDto, Author>();
+        CreateMap<Author, AuthorEditDto>();
+        CreateMap<AuthorEditDto, Author>();
         CreateMap<Book, BookDto>()
             .ForMember(dest => dest.Category
                 , opt => opt.MapFrom(src => new CategoryDto
