@@ -30,6 +30,7 @@ public class OrdersController: BaseApiController
     }
     
     // Create an order
+    [Authorize(Roles = SD.Admin)]
     [HttpPost(ApiEndpoints.V1.Orders.Create)]
     public async Task<IActionResult> CreateOrder(CreateOrderDto createOrderDto)
     {
@@ -38,7 +39,7 @@ public class OrdersController: BaseApiController
     }
     
     // Update an order
-    [AllowAnonymous]
+    [Authorize(Roles = SD.Admin)]
     [HttpPut(ApiEndpoints.V1.Orders.UpdateStatus)]
     public async Task<IActionResult> UpdateOrder(Guid id, [FromBody] OrderUpdatedDto orderUpdatedDto)
     {
@@ -46,7 +47,8 @@ public class OrdersController: BaseApiController
     }
     
     // Get all orders in the database
-    [AllowAnonymous]
+    // For Admin only
+    [Authorize(Roles = SD.Admin)]
     [HttpGet(ApiEndpoints.V1.Orders.GetAll)]
     public async Task<IActionResult> GetAllOrders()
     {
