@@ -1,4 +1,4 @@
-using BookVoyage.Application.Common;
+using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -14,11 +14,11 @@ namespace BookVoyage.WebApi.Controllers;
 public class OrdersController: BaseApiController
 {
     // Get all orders of user
-    [AllowAnonymous]
     [HttpGet(ApiEndpoints.V1.Orders.GetByUserId)]
-    public async Task<IActionResult> GetOrders(string? id)
+    public async Task<IActionResult> GetOrders()
     {
-        return HandleResult(await Mediator.Send(new GetOrdersQuery {UserId = id}));
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        return HandleResult(await Mediator.Send(new GetOrdersQuery {UserId = userId}));
     }
 
     // Get an order by id
@@ -30,10 +30,10 @@ public class OrdersController: BaseApiController
     }
     
     // Create an order
-    [AllowAnonymous]
     [HttpPost(ApiEndpoints.V1.Orders.Create)]
-    public async Task<IActionResult> CreateOrder(CreateOrderDto createOrderDto, string userId)
+    public async Task<IActionResult> CreateOrder(CreateOrderDto createOrderDto)
     {
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
         return HandleResult(await Mediator.Send(new CreateOrderCommand {CreateOrderDto = createOrderDto, UserId = userId}));
     }
     
@@ -43,5 +43,13 @@ public class OrdersController: BaseApiController
     public async Task<IActionResult> UpdateOrder(Guid id, [FromBody] OrderUpdatedDto orderUpdatedDto)
     {
         return HandleResult(await Mediator.Send(new UpdateOrderCommand { OrderUpdatedDto = orderUpdatedDto }));
+    }
+    
+    // Get all orders in the database
+    [AllowAnonymous]
+    [HttpGet(ApiEndpoints.V1.Orders.GetAll)]
+    public async Task<IActionResult> GetAllOrders()
+    {
+        return HandleResult(await Mediator.Send(new GetAllOrderQuery()));
     }
 }

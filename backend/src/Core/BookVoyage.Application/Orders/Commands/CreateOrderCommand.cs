@@ -75,7 +75,7 @@ public class CreateOrderCommandHandler : IRequestHandler<CreateOrderCommand, Api
         // Save the order to database and remove the shoppping cart from database
         _dbContext.Orders.Add(order);
         _dbContext.ShoppingCarts.Remove(shoppingCart);
-
+        // If user want to save shipping address, update the user's address
         if (request.CreateOrderDto.SaveAddress)
         {
             var user = await _dbContext.ApplicationUsers.FirstOrDefaultAsync(x => x.UserName == request.UserId, cancellationToken: cancellationToken);
@@ -92,7 +92,7 @@ public class CreateOrderCommandHandler : IRequestHandler<CreateOrderCommand, Api
                 _dbContext.ApplicationUsers.Update(user);
             }
         }
-
+        // Check the result and return a value
         var result = await _dbContext.SaveChangesAsync(cancellationToken) > 0;
         if (!result)
         {

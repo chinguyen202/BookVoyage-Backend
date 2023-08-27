@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -13,15 +14,14 @@ namespace BookVoyage.WebApi.Controllers;
 public class ShoppingCartController: BaseApiController
 {
     // Get shopping cart of a user
-    [AllowAnonymous] // for development only
     [HttpGet(ApiEndpoints.V1.ShoppingCart.Get)]
-    public async Task<IActionResult> GetCart(string id)
+    public async Task<IActionResult> GetCart()
     {
+        var id = User.FindFirstValue(ClaimTypes.NameIdentifier);
         return HandleResult(await Mediator.Send(new GetCartQuery { Id = id }));
     }
     
     //  Insert or update a shopping cart
-    [AllowAnonymous] // for development only
     [HttpPost(ApiEndpoints.V1.ShoppingCart.UpsertItem)]
     public async Task<IActionResult> UpsertItemInCart(UpsertShoppingCartDto shoppingCartDto)
     {

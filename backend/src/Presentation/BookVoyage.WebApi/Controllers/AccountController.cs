@@ -98,7 +98,7 @@ public class AccountController: ControllerBase
 
         var address = await _userManager.Users
             .Where(u => u.Id == userId)
-            .Select(user => user.Address)
+            .Select(u => u.Address)
             .FirstOrDefaultAsync();
         return ApiResult<UserAddress>.Success(address);
     }

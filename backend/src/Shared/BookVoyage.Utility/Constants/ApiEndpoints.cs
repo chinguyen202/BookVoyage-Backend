@@ -60,14 +60,15 @@ public static class ApiEndpoints
         {
             private const string Base = $"{VersionBase}/cart";
             public const string UpsertItem = Base;
-            public const string Get = $"{Base}/{{id:guid}}";
+            public const string Get = $"{Base}";
         }
 
         public static class Orders
         {
             private const string Base = $"{VersionBase}/orders";
             public const string Create = Base;
-            public const string GetByUserId = $"{Base}/users/{{id:guid}}";
+            public const string GetAll = Base;
+            public const string GetByUserId = $"{Base}/users";
             public const string GetByOrderId = $"{Base}/{{id:guid}}";
             public const string UpdateStatus = $"{Base}/{{id:guid}}";
         }
