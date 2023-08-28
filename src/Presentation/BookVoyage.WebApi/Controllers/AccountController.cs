@@ -82,7 +82,6 @@ public class AccountController: ControllerBase
             var responseDto =await CreateUserObject(user);
             return ApiResult<LoginResponseDto>.Success(responseDto);
         }
-
         return ApiResult<LoginResponseDto>.Failure(result.Errors.ToString());
     }
     

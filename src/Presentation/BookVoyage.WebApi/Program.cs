@@ -33,7 +33,7 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy(name: MyAllowOrigins, policy =>
     {
-        policy.WithOrigins("https://book-voyage-frontend.vercel.app/")
+        policy.WithOrigins("https://book-voyage-frontend.vercel.app")
             .AllowAnyHeader()
             .AllowAnyMethod();
         policy.WithOrigins("http://localhost:3000")
