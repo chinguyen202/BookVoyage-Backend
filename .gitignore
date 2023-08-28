@@ -476,9 +476,6 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 
-# Rider
+.DS_Store
 .idea/
-.vscode/
-#development 
 src/Presentation/BookVoyage.WebApi/appsettings.json
-src/Presentation/BookVoyage.WebApi/appsettings.Development.json
