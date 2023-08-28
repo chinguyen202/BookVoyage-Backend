@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Authorization;
+using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -29,10 +30,14 @@ builder.Services.AddControllers(option =>
 });
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("CorsPolicy", policy =>
-    {
-        policy.AllowAnyMethod().AllowAnyHeader().WithOrigins("*");
-    });
+    options.AddPolicy(
+        "CorsPolicy",
+        builder =>
+        {
+            builder.WithOrigins("https://book-voyage-frontend.vercel.app")
+                .AllowAnyHeader()
+                .AllowAnyMethod();
+        });
 });
 builder.Services.AddIdentityServices(builder.Configuration);
 builder.Services.AddPersistenceServices(builder.Configuration);
@@ -71,7 +76,11 @@ app.UseCors("CorsPolicy");
 app.UseMiddleware<ExceptionMiddleware>();
 
 app.UseSwagger();
-app.UseSwaggerUI();
+app.UseSwaggerUI(options =>
+{
+    options.SwaggerEndpoint("/swagger/v1/swagger.json", "BookVoyageV1");
+    options.RoutePrefix = String.Empty;
+});
 
 app.UseHttpsRedirection();
 

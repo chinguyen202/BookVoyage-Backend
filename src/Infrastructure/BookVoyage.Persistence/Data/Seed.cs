@@ -20,7 +20,7 @@ public class Seed
                     UserName = "admin",
                     Email = "admin@test.com",
                 };
-                await userManager.CreateAsync(adminUser, "Admin123!"); // You can set a strong password here
+                await userManager.CreateAsync(adminUser, "Admin123!"); 
                 
                 // Assign the admin role to the admin user
                 await userManager.AddToRoleAsync(adminUser, SD.Admin);
