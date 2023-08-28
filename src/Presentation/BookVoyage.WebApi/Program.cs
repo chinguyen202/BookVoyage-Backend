@@ -33,7 +33,10 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy(name: MyAllowOrigins, policy =>
     {
-        policy.WithOrigins("http://localhost:3000", "https://bookvoyage-server.azurewebsites.net/api/v1") // Adjust the frontend URL
+        policy.WithOrigins("https://bookvoyage-server.azurewebsites.net/api/v1")
+            .AllowAnyHeader()
+            .AllowAnyMethod();
+        policy.WithOrigins("http://localhost:3000")
             .AllowAnyHeader()
             .AllowAnyMethod();
     });
