@@ -36,7 +36,7 @@ public class EditBookCommandHandler : IRequestHandler<EditBookCommand, ApiResult
         await _validator.ValidateAndThrowAsync(request.BookEditDto, cancellationToken);
         // Get the update book from database
         var bookFromDb = await _dbContext.Books
-                .Include(b => b.Authors)
+                .Include(b => b.Author)
                 .SingleOrDefaultAsync(b => b.Id == request.BookEditDto.Id, cancellationToken: cancellationToken);
 
         if (bookFromDb == null)
@@ -56,14 +56,11 @@ public class EditBookCommandHandler : IRequestHandler<EditBookCommand, ApiResult
         }
 
         // Check if authors have changed and update accordingly
-        var currentAuthorIds = bookFromDb.Authors.Select(a => a.Id).ToList();
-        if (!currentAuthorIds.SequenceEqual(request.BookEditDto.AuthorIds))
+        var currentAuthorId = bookFromDb.Author.Id;
+        if (currentAuthorId != request.BookEditDto.AuthorId)
         {
-            var authors = await _dbContext.Authors
-                .Where(a => request.BookEditDto.AuthorIds.Contains(a.Id))
-                .ToListAsync(cancellationToken: cancellationToken);
-            bookFromDb.Authors.Clear();
-            bookFromDb.Authors.AddRange(authors);
+            var author = await _dbContext.Authors.FindAsync(request.BookEditDto.AuthorId);
+            bookFromDb.Author = author;
         }
         
         // Check if the image was changed 

@@ -26,7 +26,7 @@ namespace BookVoyage.Application.Books.Queries;
         {
             var books = await _dbContext.Books
                 .Include(a => a.Category)
-                .Include(a => a.Authors)
+                .Include(a => a.Author)
                 .ToListAsync(cancellationToken: cancellationToken);
 
             var bookDtos = _mapper.Map<List<BookDto>>(books);

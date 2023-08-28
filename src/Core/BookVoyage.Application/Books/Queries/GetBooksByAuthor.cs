@@ -26,9 +26,9 @@ public class GetBooksByAuthorHandler : IRequestHandler<GetBooksByAuthorQuery, Ap
     public async Task<ApiResult<List<Book>>> Handle(GetBooksByAuthorQuery request, CancellationToken cancellationToken)
     {
         var books = await _dbContext.Books
-            .Where(b => b.Authors.Any(a => a.Id == request.Id))
+            .Where(b => b.Author.Id == request.Id)
             .Include(b => b.Category)
-            .Include(b => b.Authors)
+            .Include(b => b.Author)
             .ToListAsync(cancellationToken: cancellationToken);
         return ApiResult<List<Book>>.Success(books);
     }

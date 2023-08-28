@@ -31,7 +31,7 @@ public class BookValidator: AbstractValidator<BookUpsertDto>
     {
         var existingBooks = _dbContext.Books
             .Where(b => b.Title == book.Title 
-            && b.Authors.Any(a => a.Id == book.AuthorIds[0]) 
+            && b.Author.Id == book.AuthorId 
             && b.YearOfPublished == book.YearOfPublished)
             .ToList();
 

@@ -9,7 +9,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace BookVoyage.Persistence.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class UpdateRelationship : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -262,12 +262,19 @@ namespace BookVoyage.Persistence.Migrations
                     year_of_published = table.Column<int>(type: "integer", nullable: false),
                     image_url = table.Column<string>(type: "text", nullable: false),
                     category_id = table.Column<Guid>(type: "uuid", nullable: false),
+                    author_id = table.Column<Guid>(type: "uuid", nullable: false),
                     created_at = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
                     modified_at = table.Column<DateTime>(type: "timestamp without time zone", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("pk_books", x => x.id);
+                    table.ForeignKey(
+                        name: "fk_books_authors_author_id",
+                        column: x => x.author_id,
+                        principalTable: "authors",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "fk_books_categories_category_id",
                         column: x => x.category_id,
@@ -277,39 +284,25 @@ namespace BookVoyage.Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "author_book",
+                name: "order_item",
                 columns: table => new
                 {
-                    authors_id = table.Column<Guid>(type: "uuid", nullable: false),
-                    books_id = table.Column<Guid>(type: "uuid", nullable: false),
-                    author_id = table.Column<Guid>(type: "uuid", nullable: true),
-                    book_id = table.Column<Guid>(type: "uuid", nullable: true)
+                    id = table.Column<Guid>(type: "uuid", nullable: false),
+                    price = table.Column<double>(type: "double precision", nullable: false),
+                    quantity = table.Column<int>(type: "integer", nullable: false),
+                    book_ordered_item_book_id = table.Column<Guid>(type: "uuid", nullable: false),
+                    book_ordered_item_book_name = table.Column<string>(type: "text", nullable: false),
+                    book_ordered_item_image_url = table.Column<string>(type: "text", nullable: false),
+                    order_id = table.Column<Guid>(type: "uuid", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("pk_author_book", x => new { x.authors_id, x.books_id });
+                    table.PrimaryKey("pk_order_item", x => x.id);
                     table.ForeignKey(
-                        name: "fk_author_book_authors_author_id",
-                        column: x => x.author_id,
-                        principalTable: "authors",
+                        name: "fk_order_item_orders_order_id",
+                        column: x => x.order_id,
+                        principalTable: "orders",
                         principalColumn: "id");
-                    table.ForeignKey(
-                        name: "fk_author_book_authors_authors_id",
-                        column: x => x.authors_id,
-                        principalTable: "authors",
-                        principalColumn: "id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "fk_author_book_books_book_id",
-                        column: x => x.book_id,
-                        principalTable: "books",
-                        principalColumn: "id");
-                    table.ForeignKey(
-                        name: "fk_author_book_books_books_id",
-                        column: x => x.books_id,
-                        principalTable: "books",
-                        principalColumn: "id",
-                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -338,41 +331,13 @@ namespace BookVoyage.Persistence.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
-            migrationBuilder.CreateTable(
-                name: "order_item",
-                columns: table => new
-                {
-                    id = table.Column<Guid>(type: "uuid", nullable: false),
-                    book_name = table.Column<string>(type: "text", nullable: false),
-                    price = table.Column<double>(type: "double precision", nullable: false),
-                    quantity = table.Column<int>(type: "integer", nullable: false),
-                    book_id = table.Column<Guid>(type: "uuid", nullable: false),
-                    order_id = table.Column<Guid>(type: "uuid", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("pk_order_item", x => x.id);
-                    table.ForeignKey(
-                        name: "fk_order_item_books_book_id",
-                        column: x => x.book_id,
-                        principalTable: "books",
-                        principalColumn: "id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "fk_order_item_orders_order_id",
-                        column: x => x.order_id,
-                        principalTable: "orders",
-                        principalColumn: "id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "id", "concurrency_stamp", "name", "normalized_name" },
                 values: new object[,]
                 {
-                    { "3203f2d8-8309-497d-8bbd-ef54fcbc3126", null, "customer", "CUSTOMER" },
-                    { "601660c9-f970-4c38-b00b-e4c32b399927", null, "admin", "ADMIN" }
+                    { "32253ba3-20dc-4fb1-bfff-bd9797a87c4a", "user", "customer", "CUSTOMER" },
+                    { "dc40eb34-d4ad-463b-a564-a4aa169710dd", "a5e4b905-bf50-4877-9f09-ab4bc1ff62b3", "admin", "ADMIN" }
                 });
 
             migrationBuilder.CreateIndex(
@@ -413,19 +378,9 @@ namespace BookVoyage.Persistence.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "ix_author_book_author_id",
-                table: "author_book",
+                name: "ix_books_author_id",
+                table: "books",
                 column: "author_id");
-
-            migrationBuilder.CreateIndex(
-                name: "ix_author_book_book_id",
-                table: "author_book",
-                column: "book_id");
-
-            migrationBuilder.CreateIndex(
-                name: "ix_author_book_books_id",
-                table: "author_book",
-                column: "books_id");
 
             migrationBuilder.CreateIndex(
                 name: "ix_books_category_id",
@@ -441,11 +396,6 @@ namespace BookVoyage.Persistence.Migrations
                 name: "ix_cart_items_shopping_cart_id",
                 table: "cart_items",
                 column: "shopping_cart_id");
-
-            migrationBuilder.CreateIndex(
-                name: "ix_order_item_book_id",
-                table: "order_item",
-                column: "book_id");
 
             migrationBuilder.CreateIndex(
                 name: "ix_order_item_order_id",
@@ -472,9 +422,6 @@ namespace BookVoyage.Persistence.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "author_book");
-
-            migrationBuilder.DropTable(
                 name: "cart_items");
 
             migrationBuilder.DropTable(
@@ -487,19 +434,19 @@ namespace BookVoyage.Persistence.Migrations
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
-                name: "authors");
+                name: "books");
 
             migrationBuilder.DropTable(
                 name: "shopping_carts");
-
-            migrationBuilder.DropTable(
-                name: "books");
 
             migrationBuilder.DropTable(
                 name: "orders");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
+
+            migrationBuilder.DropTable(
+                name: "authors");
 
             migrationBuilder.DropTable(
                 name: "categories");

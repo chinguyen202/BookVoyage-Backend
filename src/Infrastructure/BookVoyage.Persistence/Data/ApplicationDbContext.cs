@@ -60,13 +60,5 @@ public class ApplicationDbContext:  IdentityDbContext<ApplicationUser>,IApplicat
             .HasForeignKey<UserAddress>(a => a.Id)
             .OnDelete(DeleteBehavior.Cascade);
         
-        builder.Entity<Book>(entity =>
-        {
-            entity.HasMany(a => a.Authors)
-                .WithMany(p => p.Books)
-                .UsingEntity(
-                    l => l.HasOne(typeof(Book)).WithMany().OnDelete(DeleteBehavior.NoAction),
-                    r => r.HasOne(typeof(Author)).WithMany().OnDelete(DeleteBehavior.NoAction));
-        });
     }
 } 

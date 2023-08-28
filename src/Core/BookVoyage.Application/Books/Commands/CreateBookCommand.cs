@@ -41,12 +41,10 @@ public class CreateBookCommandHandler : IRequestHandler<CreateBookCommand, ApiRe
         // Fetch the category from db if exists
         var category = await _dbContext.Categories.FindAsync(request.BookUpsertDto.CategoryId);
         newBook.Category = category;
-        // Fetch the authors from db if exists
-        var authors = await _dbContext.Authors
-            .Where(author => request.BookUpsertDto.AuthorIds
-            .Contains(author.Id))
-            .ToListAsync(cancellationToken: cancellationToken);
-        newBook.Authors.AddRange(authors);
+        // Fetch the author from db if exists
+        var author = await _dbContext.Authors.FindAsync(request.BookUpsertDto.AuthorId);
+        newBook.Author = author;
+        Console.WriteLine($"AUTHOR {author.FullName}");
         _dbContext.Books.Add(newBook);
         var result = await _dbContext.SaveChangesAsync(cancellationToken) > 0;
         if (!result) return ApiResult<Unit>.Failure("Failed to create Book");

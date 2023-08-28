@@ -30,7 +30,7 @@ public class GetBookQueryHandler : IRequestHandler<GetBookQuery, ApiResult<BookD
     {
        var book = await _dbContext.Books
            .Include(a => a.Category)
-           .Include(a => a.Authors)
+           .Include(a => a.Author)
            .FirstOrDefaultAsync(u => u.Id == request.Id, cancellationToken: cancellationToken);
        if (book == null)
        {

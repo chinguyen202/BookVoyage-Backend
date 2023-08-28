@@ -28,7 +28,8 @@ public class BooksController: BaseApiController
         return HandleResult(await Mediator.Send(new GetBookQuery { Id = id }));
     }
     //  Create a Book
-    [Authorize(Roles = SD.Admin)]
+    // [Authorize(Roles = SD.Admin)]
+    [AllowAnonymous]
     [HttpPost(ApiEndpoints.V1.Books.Create)]
     public async Task<IActionResult> CreateBook([FromForm]BookUpsertDto bookDto)
     {

@@ -15,7 +15,7 @@ public class BookDto
     public int YearOfPublished { get; set; }
     public string ImageUrl { get; set; }
     public CategoryDto Category { get; set; }
-    public List<AuthorDto> Authors { get; set; }
+    public AuthorDto Author { get; set; }
 }
 
 public class BookUpsertDto
@@ -29,5 +29,5 @@ public class BookUpsertDto
     public int YearOfPublished { get; set; }
     public IFormFile File { get; set; }
     public Guid CategoryId { get; set; }
-    public List<Guid> AuthorIds { get; set; }
+    public Guid AuthorId { get; set; }
 }

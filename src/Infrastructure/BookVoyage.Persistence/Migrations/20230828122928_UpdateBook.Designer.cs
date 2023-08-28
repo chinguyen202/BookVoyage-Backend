@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace BookVoyage.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20230822021240_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20230828122928_UpdateBook")]
+    partial class UpdateBook
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,39 +24,6 @@ namespace BookVoyage.Persistence.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
-
-            modelBuilder.Entity("AuthorBook", b =>
-                {
-                    b.Property<Guid>("AuthorsId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("authors_id");
-
-                    b.Property<Guid>("BooksId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("books_id");
-
-                    b.Property<Guid?>("AuthorId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("author_id");
-
-                    b.Property<Guid?>("BookId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("book_id");
-
-                    b.HasKey("AuthorsId", "BooksId")
-                        .HasName("pk_author_book");
-
-                    b.HasIndex("AuthorId")
-                        .HasDatabaseName("ix_author_book_author_id");
-
-                    b.HasIndex("BookId")
-                        .HasDatabaseName("ix_author_book_book_id");
-
-                    b.HasIndex("BooksId")
-                        .HasDatabaseName("ix_author_book_books_id");
-
-                    b.ToTable("author_book", (string)null);
-                });
 
             modelBuilder.Entity("BookVoyage.Domain.Entities.Author", b =>
                 {
@@ -95,6 +62,10 @@ namespace BookVoyage.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid")
                         .HasColumnName("id");
+
+                    b.Property<Guid>("AuthorId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("author_id");
 
                     b.Property<Guid>("CategoryId")
                         .HasColumnType("uuid")
@@ -142,6 +113,9 @@ namespace BookVoyage.Persistence.Migrations
 
                     b.HasKey("Id")
                         .HasName("pk_books");
+
+                    b.HasIndex("AuthorId")
+                        .HasDatabaseName("ix_books_author_id");
 
                     b.HasIndex("CategoryId")
                         .HasDatabaseName("ix_books_category_id");
@@ -256,16 +230,7 @@ namespace BookVoyage.Persistence.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("id");
 
-                    b.Property<Guid>("BookId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("book_id");
-
-                    b.Property<string>("BookName")
-                        .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("book_name");
-
-                    b.Property<Guid>("OrderId")
+                    b.Property<Guid?>("OrderId")
                         .HasColumnType("uuid")
                         .HasColumnName("order_id");
 
@@ -279,9 +244,6 @@ namespace BookVoyage.Persistence.Migrations
 
                     b.HasKey("Id")
                         .HasName("pk_order_item");
-
-                    b.HasIndex("BookId")
-                        .HasDatabaseName("ix_order_item_book_id");
 
                     b.HasIndex("OrderId")
                         .HasDatabaseName("ix_order_item_order_id");
@@ -475,13 +437,13 @@ namespace BookVoyage.Persistence.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "601660c9-f970-4c38-b00b-e4c32b399927",
+                            Id = "3ee7e17a-9777-4cb1-95ff-d088ffcccb7c",
                             Name = "admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "3203f2d8-8309-497d-8bbd-ef54fcbc3126",
+                            Id = "5075a6d8-2b24-45fa-b88b-40944c95b5dc",
                             Name = "customer",
                             NormalizedName = "CUSTOMER"
                         });
@@ -620,43 +582,23 @@ namespace BookVoyage.Persistence.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("AuthorBook", b =>
-                {
-                    b.HasOne("BookVoyage.Domain.Entities.Author", null)
-                        .WithMany()
-                        .HasForeignKey("AuthorId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .HasConstraintName("fk_author_book_authors_author_id");
-
-                    b.HasOne("BookVoyage.Domain.Entities.Author", null)
-                        .WithMany()
-                        .HasForeignKey("AuthorsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("fk_author_book_authors_authors_id");
-
-                    b.HasOne("BookVoyage.Domain.Entities.Book", null)
-                        .WithMany()
-                        .HasForeignKey("BookId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .HasConstraintName("fk_author_book_books_book_id");
-
-                    b.HasOne("BookVoyage.Domain.Entities.Book", null)
-                        .WithMany()
-                        .HasForeignKey("BooksId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("fk_author_book_books_books_id");
-                });
-
             modelBuilder.Entity("BookVoyage.Domain.Entities.Book", b =>
                 {
+                    b.HasOne("BookVoyage.Domain.Entities.Author", "Author")
+                        .WithMany("Books")
+                        .HasForeignKey("AuthorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_books_authors_author_id");
+
                     b.HasOne("BookVoyage.Domain.Entities.Category", "Category")
                         .WithMany("Books")
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("fk_books_categories_category_id");
+
+                    b.Navigation("Author");
 
                     b.Navigation("Category");
                 });
@@ -728,21 +670,42 @@ namespace BookVoyage.Persistence.Migrations
 
             modelBuilder.Entity("BookVoyage.Domain.Entities.OrderAggegate.OrderItem", b =>
                 {
-                    b.HasOne("BookVoyage.Domain.Entities.Book", "Book")
-                        .WithMany()
-                        .HasForeignKey("BookId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("fk_order_item_books_book_id");
-
                     b.HasOne("BookVoyage.Domain.Entities.OrderAggegate.Order", null)
                         .WithMany("OrderItems")
                         .HasForeignKey("OrderId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
                         .HasConstraintName("fk_order_item_orders_order_id");
 
-                    b.Navigation("Book");
+                    b.OwnsOne("BookVoyage.Domain.Entities.OrderAggegate.BookOrderedItem", "BookOrderedItem", b1 =>
+                        {
+                            b1.Property<Guid>("OrderItemId")
+                                .HasColumnType("uuid")
+                                .HasColumnName("id");
+
+                            b1.Property<Guid>("BookId")
+                                .HasColumnType("uuid")
+                                .HasColumnName("book_ordered_item_book_id");
+
+                            b1.Property<string>("BookName")
+                                .IsRequired()
+                                .HasColumnType("text")
+                                .HasColumnName("book_ordered_item_book_name");
+
+                            b1.Property<string>("ImageUrl")
+                                .IsRequired()
+                                .HasColumnType("text")
+                                .HasColumnName("book_ordered_item_image_url");
+
+                            b1.HasKey("OrderItemId");
+
+                            b1.ToTable("order_item");
+
+                            b1.WithOwner()
+                                .HasForeignKey("OrderItemId")
+                                .HasConstraintName("fk_order_item_order_item_id");
+                        });
+
+                    b.Navigation("BookOrderedItem")
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("BookVoyage.Domain.Entities.UserAggegate.UserAddress", b =>
@@ -810,6 +773,11 @@ namespace BookVoyage.Persistence.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("fk_asp_net_user_tokens_asp_net_users_user_id");
+                });
+
+            modelBuilder.Entity("BookVoyage.Domain.Entities.Author", b =>
+                {
+                    b.Navigation("Books");
                 });
 
             modelBuilder.Entity("BookVoyage.Domain.Entities.Category", b =>

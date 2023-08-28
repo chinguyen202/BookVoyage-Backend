@@ -16,6 +16,8 @@ public class Book: AuditableBaseEntity
     public Guid CategoryId { get; set; }
     [ForeignKey("CategoryId")]
     public Category Category { get; set; }
-    public List<Author> Authors { get; set; } = new();
+    public Guid AuthorId { get; set; }
+    [ForeignKey("AuthorId")]
+    public Author Author { get; set; }
     
 }

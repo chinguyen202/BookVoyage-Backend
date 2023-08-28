@@ -28,13 +28,13 @@ public class MappingProfile: Profile
                 Id = src.Category.Id,
                 Name = src.Category.Name
             }))            
-            .ForMember(dest => dest.Authors
-                , opt => opt.MapFrom(src => src.Authors.Select(author => new AuthorEditDto
+            .ForMember(dest => dest.Author
+                , opt => opt.MapFrom(src =>  new AuthorEditDto
             {
-                Id = author.Id,
-                FullName = author.FullName,
-                Publisher = author.Publisher
-            }).ToList()));
+                Id = src.Author.Id,
+                FullName = src.Author.FullName,
+                Publisher = src.Author.Publisher
+            }));
         CreateMap<BookDto, Book>();
         CreateMap<BookUpsertDto, Book>();
         CreateMap<Book, BookUpsertDto>();
