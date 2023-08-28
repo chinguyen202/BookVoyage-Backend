@@ -1,5 +1,4 @@
 using Microsoft.EntityFrameworkCore;
-
 using BookVoyage.Application.Common.Extensions;
 using BookVoyage.Domain.Entities;
 using BookVoyage.Domain.Entities.UserAggegate;
@@ -23,21 +22,21 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddControllers(option => 
+builder.Services.AddControllers(option =>
 {
     var policy = new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build();
     option.Filters.Add(new AuthorizeFilter(policy));
 });
+
+var MyAllowOrigins = "_myAllowSpecificOrigins";
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy(
-        "CorsPolicy",
-        builder =>
-        {
-            builder.WithOrigins("https://book-voyage-frontend.vercel.app")
-                .AllowAnyHeader()
-                .AllowAnyMethod();
-        });
+    options.AddPolicy(name: MyAllowOrigins, policy =>
+    {
+        policy.WithOrigins("http://localhost:3000", "https://bookvoyage-server.azurewebsites.net/api/v1") // Adjust the frontend URL
+            .AllowAnyHeader()
+            .AllowAnyMethod();
+    });
 });
 builder.Services.AddIdentityServices(builder.Configuration);
 builder.Services.AddPersistenceServices(builder.Configuration);
@@ -72,7 +71,7 @@ builder.Services.AddSwaggerGen(options =>
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-app.UseCors("CorsPolicy");
+app.UseCors(MyAllowOrigins);
 app.UseMiddleware<ExceptionMiddleware>();
 
 app.UseSwagger();
@@ -103,7 +102,7 @@ try
 }
 catch (Exception e)
 {
-    var logger = services.GetRequiredService <ILogger<Program>>();
+    var logger = services.GetRequiredService<ILogger<Program>>();
     logger.LogError(e, "An error occur during migration");
 }
 
