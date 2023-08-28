@@ -30,7 +30,7 @@ public class TokenService
         {
             claims.Add(new Claim(ClaimTypes.Role, role));
         }
-        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["TokenKey"]));
+        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("your-secret-token-key-value your-secret-token-key-value your-secret-token-key-value"));
         var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
         var tokenDescriptor = new SecurityTokenDescriptor
         {
