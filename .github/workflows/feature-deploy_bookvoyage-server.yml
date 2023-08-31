@@ -28,10 +28,10 @@ jobs:
             },
             "AllowedHosts": "*",
             "ConnectionStrings": {
-              "DefaultConnection": "Server=localhost;Port=5432;Database=BookVoyage;User Id=chinguyen;Password=database2023",
-              "StorageAccount": "DefaultEndpointsProtocol=https;AccountName=bookvoyageimages;AccountKey=bavTZ9Ejo1mUL/y5hhK3S0GLChoVRySrrXIAAqVW5t8oIHm/8XUnqOygA/+Di0pL+PABtFIZ2AyD+AStTlWMLg==;EndpointSuffix=core.windows.net"
+              "DefaultConnection": ${{secrets.DEFAULT_CONNECTION}},
+              "StorageAccount": ${{secrets.STORAGE_ACCOUNT}}
             },
-            "TokenKey": "your-secret-token-key-value your-secret-token-key-value your-secret-token-key-value",              
+            "TokenKey": ${{secrets.TOKEN_KEY}},              
           }' > appsettings.json
       
       - name: Set up .NET Core
