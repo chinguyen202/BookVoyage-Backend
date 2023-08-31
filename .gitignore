@@ -478,3 +478,5 @@ $RECYCLE.BIN/
 
 .DS_Store
 .idea/
+src/Presentation/BookVoyage.WebApi/appsettings.json
+
