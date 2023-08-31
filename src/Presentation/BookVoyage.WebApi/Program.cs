@@ -1,6 +1,5 @@
 using Microsoft.EntityFrameworkCore;
 using BookVoyage.Application.Common.Extensions;
-using BookVoyage.Domain.Entities;
 using BookVoyage.Domain.Entities.UserAggegate;
 using BookVoyage.Infrastructure;
 using BookVoyage.Persistence.Data;
@@ -11,7 +10,6 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Authorization;
-using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
