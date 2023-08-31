@@ -8,6 +8,7 @@
 3. [Backend packages](#backend-packages)
 4. [Project structure](#project-structure)
 5. [Database design](#database-design)
+6. [Project usage](#project-usage)
 
 
 ## Description
@@ -42,5 +43,21 @@ This project on the backend side is implementing CLEAN architecture. The layers 
 
 ![Project structure](https://github.com/chinguyen202/BookVoyage-Backend/assets/58989517/e2625679-2f75-40db-894e-c3ebed568d5f)
 
-### Database design
+## Database design
 ![BookVoyage Database ERD](https://github.com/chinguyen202/BookVoyage-Backend/assets/58989517/84eda64c-ea48-430d-a19c-65ab31c98a30)
+
+## Project usage 
+  1.  Clone the project
+  2.  Prerequisites
+      - .NET SDK V 7
+  3.  Configure the connection string in the appsettings.json file:
+      ```
+      "ConnectionStrings": {
+      "DefaultConnection": "Server=<server_name>;Database=<database_name>;User Id=<username>;Password=<password>;"
+      "DefaultStorage": "your azure storage key"
+      },
+      "TokenKey": "Your token key"
+      ```
+  4.  Apply migrations to the database: dotnet ef database update
+  5.  Run the backend locally at: http://localhost:5000 run: dotnet watch
+
