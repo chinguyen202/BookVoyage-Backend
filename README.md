@@ -50,14 +50,6 @@ This project on the backend side is implementing CLEAN architecture. The layers 
   1.  Clone the project
   2.  Prerequisites
       - .NET SDK V 7
-  3.  Configure the connection string in the appsettings.json file:
-      ```
-      "ConnectionStrings": {
-      "DefaultConnection": "Server=<server_name>;Database=<database_name>;User Id=<username>;Password=<password>;"
-      "DefaultStorage": "your azure storage key"
-      },
-      "TokenKey": "Your token key"
-      ```
   4.  Apply migrations to the database: dotnet ef database update
   5.  Run the backend locally at: http://localhost:5000 run: dotnet watch
 
