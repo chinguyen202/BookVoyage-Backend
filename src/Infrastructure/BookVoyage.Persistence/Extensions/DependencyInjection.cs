@@ -11,7 +11,7 @@ public static class DependencyInjection
     public static IServiceCollection AddPersistenceServices(this IServiceCollection services, IConfiguration config)
     {
         services.AddDbContext<ApplicationDbContext>(option => 
-            option.UseNpgsql(config["ConnectionStrings:DefaultConnection"]));
+            option.UseNpgsql(config.GetConnectionString("DefaultConnection")));
         services.AddScoped<IApplicationDbContext, ApplicationDbContext>();
         return services;
     }

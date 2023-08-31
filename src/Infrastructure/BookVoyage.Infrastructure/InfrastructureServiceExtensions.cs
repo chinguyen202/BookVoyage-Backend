@@ -12,7 +12,7 @@ public static class InfrastructureServiceExtensions
         IConfiguration configuration)
     {
         services.AddSingleton(x => new BlobServiceClient(
-            configuration["ConnectionStrings:StorageAccount"]));
+            configuration.GetConnectionString("StorageAccount")));
         services.AddScoped<IBlobService, BlobService>();
         return services;
     }

@@ -19,7 +19,7 @@ public static class IdentityServiceExtensions
             })
             .AddRoles<IdentityRole>()
             .AddEntityFrameworkStores<ApplicationDbContext>();
-        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["TokenKey"] ?? string.Empty));
+        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["TokenKey"]));
         services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(option =>
         {
             option.TokenValidationParameters = new TokenValidationParameters
