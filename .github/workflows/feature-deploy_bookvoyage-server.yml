@@ -15,23 +15,25 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-      - name: Create appsetting file
+      - name: Create appsettings file
         run: |
           cd src/Presentation/BookVoyage.WebApi/
-          echo '{
-            "ConnectionStrings": {
-              "DefaultConnection": "'$DEFAULT_CONNECTION'",
-              "StorageAccount": "'$STORAGE_ACCOUNT'"
-            },
+          echo ' {
             "Logging": {
               "LogLevel": {
-                "Default": "Information",
-                "Microsoft.AspNetCore": "Warning"
+                "Default": "Debug",
+                "System": "Information",
+                "Microsoft": "Information"
               }
             },
-            "TokenKey": "'$TOKEN_KEY'"
+            "AllowedHosts": "*",
+            "ConnectionStrings": {
+              "DefaultConnection": "Server=localhost;Port=5432;Database=BookVoyage;User Id=chinguyen;Password=database2023",
+              "StorageAccount": "DefaultEndpointsProtocol=https;AccountName=bookvoyageimages;AccountKey=bavTZ9Ejo1mUL/y5hhK3S0GLChoVRySrrXIAAqVW5t8oIHm/8XUnqOygA/+Di0pL+PABtFIZ2AyD+AStTlWMLg==;EndpointSuffix=core.windows.net"
+            },
+            "TokenKey": "your-secret-token-key-value your-secret-token-key-value your-secret-token-key-value",              
           }' > appsettings.json
-          
+      
       - name: Set up .NET Core
         uses: actions/setup-dotnet@v1
         with:
