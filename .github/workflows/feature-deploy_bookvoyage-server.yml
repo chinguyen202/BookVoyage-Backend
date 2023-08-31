@@ -16,21 +16,21 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Create appsetting file
-        run: |
-          cd src/Presentation/BookVoyage.WebApi
-            echo '{
-            "ConnectionStrings": {
-              "DefaultConnection": "${{ secrets.DEFAULT_CONNECTION }}",
-              "StorageAccount": "${{ secrets.STORAGE_ACCOUNT }}"
-            },
-            "Logging": {
-              "LogLevel": {
-                "Default": "Information",
-                "Microsoft.AspNetCore": "Warning"
-              }
-            },
-            "TokenKey": "${{ secrets.TOKEN_KEY }}"
-          }' > appsettings.json
+  run: |
+    cd src/Presentation/BookVoyage.WebApi
+    echo '{
+      "ConnectionStrings": {
+        "DefaultConnection": "${{ secrets.DEFAULT_CONNECTION }}",
+        "StorageAccount": "${{ secrets.STORAGE_ACCOUNT }}"
+      },
+      "Logging": {
+        "LogLevel": {
+          "Default": "Information",
+          "Microsoft.AspNetCore": "Warning"
+        }
+      },
+      "TokenKey": "${{ secrets.TOKEN_KEY }}"
+    }' > appsettings.json
 
       - name: Set up .NET Core
         uses: actions/setup-dotnet@v1
