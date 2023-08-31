@@ -17,7 +17,7 @@ jobs:
       - uses: actions/checkout@v2
       - name: Substitute placeholders
         run: |
-          sed -i "s/__DEFAULT_CONNECTION__/${{ secrets.DEFAULT_CONNECTION }}/g" src/Presentation/BookVoyage.WebApi/appsettings.template.json
+          sed -i "s/__DEFAULT_CONNECTION__/${{ secrets.DEFAULT_CONNECTION }} | sed -e 's/[\/&]/\\&/g')~g" src/Presentation/BookVoyage.WebApi/appsettings.template.json
           sed -i "s/__STORAGE_ACCOUNT__/${{ secrets.STORAGE_ACCOUNT }}/g" src/Presentation/BookVoyage.WebApi/appsettings.template.json
           sed -i "s/__TOKEN_KEY__/${{ secrets.TOKEN_KEY }}/g" src/Presentation/BookVoyage.WebApi/appsettings.template.json
      
