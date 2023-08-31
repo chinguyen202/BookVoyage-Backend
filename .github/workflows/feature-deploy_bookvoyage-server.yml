@@ -15,15 +15,23 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-      - name: Substitute placeholders
+      - name: Create appsetting file
         run: |
-          sed -i "s/__DEFAULT_CONNECTION__/${{ secrets.DEFAULT_CONNECTION }}/g" src/Presentation/BookVoyage.WebApi/appsettings.template.json
-          sed -i "s/__STORAGE_ACCOUNT__/${{ secrets.STORAGE_ACCOUNT }}/g" src/Presentation/BookVoyage.WebApi/appsettings.template.json
-          sed -i "s/__TOKEN_KEY__/${{ secrets.TOKEN_KEY }}/g" src/Presentation/BookVoyage.WebApi/appsettings.template.json
-     
-      - name: Rename template to appsettings.json
-        run: mv src/Presentation/BookVoyage.WebApi/appsettings.template.json src/Presentation/BookVoyage.WebApi/appsettings.json
-      
+          cd src/Presentation/BookVoyage.WebApi
+          echo '{
+            "ConnectionStrings": {
+              "DefaultConnection": "'$DEFAULT_CONNECTION'",
+              "StorageAccount": "'$STORAGE_ACCOUNT'"
+            },
+            "Logging": {
+              "LogLevel": {
+                "Default": "Information",
+                "Microsoft.AspNetCore": "Warning"
+              }
+            },
+            "TokenKey": "'$TOKEN_KEY'"
+          }' > appsettings.json
+          
       - name: Set up .NET Core
         uses: actions/setup-dotnet@v1
         with:
